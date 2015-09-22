@@ -60,6 +60,9 @@
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
     <Compile Include="Monopoly.cs" />
+    <Compile Include="MonopolyTests.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerTests.cs" />
     <Compile Include="Property.cs" />
     <Compile Include="PropertyTests.cs" />
   </ItemGroup>
