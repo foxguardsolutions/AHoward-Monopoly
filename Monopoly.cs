@@ -42,12 +42,11 @@ namespace Monopoly
             _players = new List<Player>();
             foreach (var name in playerNames)
             {
-                Player player = new Player(name);
-                player.TurnEnded += OnTurnEnded;
-                _players.Add(player);
+                _players.Add(new Player(name));
             }
 
             ShufflePlayers();
+            GetPlayer(0).TurnEnded += OnTurnEnded;
         }
 
         private void ShufflePlayers()
@@ -65,9 +64,12 @@ namespace Monopoly
             return _players[index];
         }
 
-        public void OnTurnEnded(object sender)
+        public void OnTurnEnded(Player sender)
         {
+            sender.TurnEnded -= OnTurnEnded;
             PlayerTurnIndex += 1;
+            GetPlayer(PlayerTurnIndex).TurnEnded += OnTurnEnded;
+
             if (PlayerTurnIndex == 0)
             {
                 CompletedRounds++;

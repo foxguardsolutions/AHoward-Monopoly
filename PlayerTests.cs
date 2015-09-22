@@ -53,9 +53,9 @@ namespace Monopoly
             Assert.IsTrue(playa.Position >= 2 && playa.Position <= 12);
         }
 
-        public void OnTurnEnded(object sender)
+        public void OnTurnEnded(Player sender)
         {
-            _lastPlayerToTakeTurn = (Player)sender;
+            _lastPlayerToTakeTurn = sender;
         }
 
         [Test]

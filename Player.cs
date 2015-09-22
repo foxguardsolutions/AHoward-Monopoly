@@ -2,7 +2,7 @@
 
 namespace Monopoly
 {
-    public delegate void TurnEndedDelegate(object sender);
+    public delegate void TurnEndedDelegate(Player sender);
 
     public class Player
     {
