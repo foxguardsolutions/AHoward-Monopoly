@@ -13,16 +13,16 @@ namespace Monopoly
         public void BoardInitializes40PropertiesUponInstantiation()
         {
             Board board = new Board();
-            Assert.AreEqual(40, Monopoly.PropertyCount);
+            Assert.AreEqual(40, Board.PropertyCount);
         }
 
         [Test]
         public void PropertiesAreInitializedWithNamesInOrder()
         {
             Board board = new Board();
-            for (int index = 0; index < Monopoly.PropertyCount; index++)
+            for (int index = 0; index < Board.PropertyCount; index++)
             {
-                Assert.AreEqual(Monopoly.PropertyNames[index], board.GetPropertyName(index));
+                Assert.AreEqual(Board.PropertyNames[index], board.GetPropertyName(index));
             }
         }
     }

@@ -7,74 +7,71 @@ namespace Monopoly
 {
     public class Monopoly
     {
-        private static readonly string[] _propertyNames =
-        {
-            "Go",
-            "Mediterranean Avenue",
-            "Community Chest",
-            "Baltic Avenue",
-            "Income Tax",
-            "Reading RailRoad",
-            "Oriental Avenue",
-            "Chance",
-            "Vermont Avenue",
-            "Connecticut Avenue",
-            "Jail",
-            "St. Charles Place",
-            "Electric Company",
-            "States Avenue",
-            "Virginia Avenue",
-            "Pennsylvania Railroad",
-            "St. James Place",
-            "Community Chest",
-            "Tennessee Avenue",
-            "New York Avenue",
-            "Free Parking",
-            "Kentucky Avenue",
-            "Chance",
-            "Indiana Avenue",
-            "Illinois Avenue",
-            "B. & O. Railroad",
-            "Atlantic Avenue",
-            "Ventnor Avenue",
-            "Water Works",
-            "Marvin Gardens",
-            "Go To Jail",
-            "Pacific Avenue",
-            "North Carolina Avenue",
-            "Community Chest",
-            "Pennsylvania Avenue",
-            "Short Line Railroad",
-            "Chance",
-            "Park Place",
-            "Luxury Tax",
-            "Boardwalk",
-        };
+        private static Random _generator = new Random();
 
         private Board _gameBoard;
         private List<Player> _players;
-        private Random _generator = new Random();
-        private int _minDieRoll = 1, _maxDieRoll = 6;
+        private int _playerTurnIndex = 0;
 
-        public static string[] PropertyNames
+        public static Random Generator
         {
-            get { return _propertyNames; }
+            get { return _generator; }
         }
 
-        public static int PropertyCount
+        public int PlayerCount
         {
-            get { return _propertyNames.Length; }
+            get { return _players.Count; }
         }
 
-        public Monopoly()
+        public int PlayerTurnIndex
+        {
+            get { return _playerTurnIndex; }
+            set { _playerTurnIndex = value % PlayerCount; }
+        }
+
+        public int CompletedRounds { get; set; }
+
+        public Monopoly(string[] playerNames)
         {
             _gameBoard = new Board();
-            _players = new List<Player>();
+            InitializePlayers(playerNames);
         }
 
-        public int RollDie()
+        private void InitializePlayers(string[] playerNames)
         {
-            return _generator.Next(_minDieRoll, _maxDieRoll + 1);
+            _players = new List<Player>();
+            foreach (var name in playerNames)
+            {
+                Player player = new Player(name);
+                player.TurnEnded += OnTurnEnded;
+                _players.Add(player);
+            }
+
+            ShufflePlayers();
+        }
+
+        private void ShufflePlayers()
+        {
+            for (var i = 0; i < 2 * PlayerCount; i++)
+            {
+                var holder = _players[_generator.Next(0, PlayerCount)];
+                _players.Remove(holder);
+                _players.Add(holder);
+            }
+        }
+
+        public Player GetPlayer(int index)
+        {
+            return _players[index];
+        }
+
+        public void OnTurnEnded(object sender)
+        {
+            PlayerTurnIndex += 1;
+            if (PlayerTurnIndex == 0)
+            {
+                CompletedRounds++;
+            }
         }
 
         public static int Main(string[] args)
