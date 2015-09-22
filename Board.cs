@@ -68,9 +68,9 @@ namespace Monopoly
             }
         }
 
-        public string GetPropertyName(int index)
+        public Property GetProperty(int index)
         {
-            return properties[index].Name;
+            return properties[index];
         }
     }
 }

@@ -64,6 +64,11 @@ namespace Monopoly
             return _players[index];
         }
 
+        public Property GetProperty(int index)
+        {
+            return _gameBoard.GetProperty(index);
+        }
+
         public void OnTurnEnded(Player sender)
         {
             sender.TurnEnded -= OnTurnEnded;

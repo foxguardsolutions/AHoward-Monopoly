@@ -22,7 +22,7 @@ namespace Monopoly
             Board board = new Board();
             for (int index = 0; index < Board.PropertyCount; index++)
             {
-                Assert.AreEqual(Board.PropertyNames[index], board.GetPropertyName(index));
+                Assert.AreEqual(Board.PropertyNames[index], board.GetProperty(index).Name);
             }
         }
     }
