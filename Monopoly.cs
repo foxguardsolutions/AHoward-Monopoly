@@ -47,6 +47,14 @@ namespace Monopoly
             InitializePlayers(playerNames);
         }
 
+        ~Monopoly()
+        {
+            foreach (var player in GetAllPlayers())
+            {
+                player.TurnEnded -= OnTurnEnded;
+            }
+        }
+
         private void InitializePlayers(string[] playerNames)
         {
             _players = new List<Player>();
