@@ -47,5 +47,18 @@ namespace Monopoly
             game.GetPlayer(1).TakeTurn();
             Assert.AreEqual(1, game.CompletedRounds);
         }
+
+        [Test]
+        public void EmulatePlayerTurnAdvancesPlayerTurnIndex()
+        {
+            string[] playerNames = new string[] { "player a", "player b" };
+            Monopoly game = new Monopoly(playerNames);
+            Assert.AreEqual(0, game.PlayerTurnIndex);
+            game.EmulatePlayerTurn();
+            Assert.AreEqual(1, game.PlayerTurnIndex);
+            game.EmulatePlayerTurn();
+            Assert.AreEqual(0, game.PlayerTurnIndex);
+            Assert.AreEqual(1, game.CompletedRounds);
+        }
     }
 }

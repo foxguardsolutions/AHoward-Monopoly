@@ -2,7 +2,7 @@
 
 namespace Monopoly
 {
-    public delegate void TurnEndedDelegate(Player sender);
+    public delegate void TurnEndedDelegate(Player player);
 
     public class Player
     {
@@ -31,11 +31,7 @@ namespace Monopoly
         public void TakeTurn()
         {
             Position += RollDie() + RollDie();
-
-            if (TurnEnded != null)
-            {
-                TurnEnded(this);
-            }
+            TurnEnded?.Invoke(this);
         }
     }
 }

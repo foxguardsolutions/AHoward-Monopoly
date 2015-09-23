@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{94C1CAFD-3647-4F60-8CDA-BE88F18179E5}</ProjectGuid>
+    <ProjectGuid>{067B89EE-894A-4DE6-9826-1A5D28C17026}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>ConsoleApplication</AssemblyName>
@@ -53,13 +53,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
     <Compile Include="Monopoly.cs" />
+    <Compile Include="MonopolyCLI.cs" />
     <Compile Include="MonopolyTests.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerTests.cs" />
@@ -67,7 +64,12 @@
     <Compile Include="PropertyTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include=".git\" />
+    <Folder Include=".vs\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

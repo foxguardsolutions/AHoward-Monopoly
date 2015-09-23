@@ -9,7 +9,7 @@ namespace Monopoly
     [TestFixture]
     public class PlayerTests
     {
-        private Player _lastPlayerToTakeTurn = null;
+        private Player _lastPlayerToEndTurn = null;
 
         [TestCase("Snoop Dog", Result = "Snoop Dog")]
         [TestCase("Player B", Result = "Player B")]
@@ -53,19 +53,19 @@ namespace Monopoly
             Assert.IsTrue(playa.Position >= 2 && playa.Position <= 12);
         }
 
-        public void OnTurnEnded(Player sender)
+        public void OnTurnEnded(Player player)
         {
-            _lastPlayerToTakeTurn = sender;
+            _lastPlayerToEndTurn = player;
         }
 
         [Test]
-        public void TakeTurnEmitsTurnEnded()
+        public void TakeTurnInvokesTurnEnded()
         {
             Player playa = new Player();
             playa.TurnEnded += OnTurnEnded;
+            Assert.AreEqual(null, _lastPlayerToEndTurn);
             playa.TakeTurn();
-            playa.TurnEnded -= OnTurnEnded;
-            Assert.AreEqual(playa, _lastPlayerToTakeTurn);
+            Assert.AreEqual(playa, _lastPlayerToEndTurn);
         }
     }
 }

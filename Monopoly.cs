@@ -25,8 +25,18 @@ namespace Monopoly
 
         public int PlayerTurnIndex
         {
-            get { return _playerTurnIndex; }
-            set { _playerTurnIndex = value % PlayerCount; }
+            get
+            {
+                return _playerTurnIndex;
+            }
+            set
+            {
+                _playerTurnIndex = value % PlayerCount;
+                if (_playerTurnIndex == 0)
+                {
+                    CompletedRounds++;
+                }
+            }
         }
 
         public int CompletedRounds { get; set; }
@@ -42,11 +52,12 @@ namespace Monopoly
             _players = new List<Player>();
             foreach (var name in playerNames)
             {
-                _players.Add(new Player(name));
+                Player player = new Player(name);
+                _players.Add(player);
+                player.TurnEnded += OnTurnEnded;
             }
 
             ShufflePlayers();
-            GetPlayer(0).TurnEnded += OnTurnEnded;
         }
 
         private void ShufflePlayers()
@@ -64,26 +75,29 @@ namespace Monopoly
             return _players[index];
         }
 
+        public IEnumerable<Player> GetAllPlayers()
+        {
+            return Enumerable.Range(0, PlayerCount).Select(GetPlayer);
+        }
+
         public Property GetProperty(int index)
         {
             return _gameBoard.GetProperty(index);
         }
 
-        public void OnTurnEnded(Player sender)
+        public IEnumerable<Property> GetAllProperties()
         {
-            sender.TurnEnded -= OnTurnEnded;
-            PlayerTurnIndex += 1;
-            GetPlayer(PlayerTurnIndex).TurnEnded += OnTurnEnded;
-
-            if (PlayerTurnIndex == 0)
-            {
-                CompletedRounds++;
-            }
+            return Enumerable.Range(0, Board.PropertyCount).Select(GetProperty);
         }
 
-        public static int Main(string[] args)
+        public void OnTurnEnded(Player player)
         {
-            return 0;
+            PlayerTurnIndex++;
+        }
+
+        public void EmulatePlayerTurn()
+        {
+            GetPlayer(PlayerTurnIndex).TakeTurn();
         }
     }
 }
