@@ -37,6 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>packages\Ninject.3.2.2.0\lib\net40\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,13 +59,30 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
-    <Compile Include="Monopoly.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="GameTests.cs" />
+    <Compile Include="IBoard.cs" />
+    <Compile Include="IGame.cs" />
+    <Compile Include="Injector.cs" />
+    <Compile Include="IPlayer.cs" />
+    <Compile Include="IPlayerDeque.cs" />
+    <Compile Include="IPlayerFactory.cs" />
+    <Compile Include="IProperty.cs" />
+    <Compile Include="IPropertyFactory.cs" />
+    <Compile Include="IRandomGenerator.cs" />
     <Compile Include="MonopolyCLI.cs" />
     <Compile Include="MonopolyTests.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="PlayerDeque.cs" />
+    <Compile Include="PlayerDequeTests.cs" />
+    <Compile Include="PlayerFactory.cs" />
     <Compile Include="PlayerTests.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="PropertyFactory.cs" />
     <Compile Include="PropertyTests.cs" />
+    <Compile Include="RandomGenerator.cs" />
+    <Compile Include="RandomGeneratorMoc.cs" />
+    <Compile Include="ServiceModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\Newtonsoft.Json.dll" />

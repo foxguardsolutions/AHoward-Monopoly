@@ -1,71 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Monopoly
 {
     [TestFixture]
     public class PlayerTests
     {
-        private Player _lastPlayerToEndTurn = null;
+        private IBoard gameBoard;
+        private IRandomGenerator generator;
+        private Player player;
 
-        [TestCase("Snoop Dog", Result = "Snoop Dog")]
-        [TestCase("Player B", Result = "Player B")]
-        public string PlayerHasAName(string inputName)
+        [SetUp]
+        public void Setup()
         {
-            Player playa = new Player(inputName);
-            return playa.Name;
+            generator = new RandomGeneratorMoc();
+            string[] properties =
+            {
+                "a", "b", "c", "d", "e"
+            };
+
+            gameBoard = new Board(new PropertyFactory(properties));
+            player = new Player(generator, gameBoard);
         }
 
         [TestCase(0, Result = 0)]
         [TestCase(1, Result = 1)]
-        [TestCase(25, Result = 25)]
-        [TestCase(40, Result = 0)]
-        [TestCase(45, Result = 5)]
-        public int PlayerPositionProperlyWrapsAroundIndicesOfGameBoard(int position)
+        [TestCase(2, Result = 2)]
+        [TestCase(3, Result = 3)]
+        [TestCase(4, Result = 4)]
+        [TestCase(5, Result = 0)]
+        [TestCase(6, Result = 1)]
+        public int PlayerPositionWrapsAroundAfterExceedingNumberOfProperties(int position)
         {
-            Player playa = new Player(position: position);
-            return playa.Position;
+            player.Position = position;
+            return player.Position;
         }
 
-        [Test]
-        public void RollDieReturnsANumberBetween1And6()
+        [TestCase(Result = 2)]
+        public int RollDieReturnsNumberBetween1and6()
         {
-            Player playa = new Player();
-            List<int> rolls = new List<int>();
-            for (int i = 0; i < 100; i++)
-            {
-                rolls.Add(playa.RollDie());
-            }
-
-            Assert.IsTrue(rolls.All(x => x <= 6 && x >= 1));
+            return player.RollDie();
         }
 
-        [Test]
-        public void TakeTurnAdvancesPlayersPosition()
+        [TestCase(0, Result = 4)]
+        [TestCase(1, Result = 0)]
+        [TestCase(2, Result = 1)]
+        public int TakeTurnProperlyIncrementsPlayerPosition(int position)
         {
-            Player playa = new Player();
-            Assert.AreEqual(0, playa.Position);
-            playa.TakeTurn();
-            Assert.AreNotEqual(0, playa.Position);
-            Assert.IsTrue(playa.Position >= 2 && playa.Position <= 12);
-        }
-
-        public void OnTurnEnded(Player player)
-        {
-            _lastPlayerToEndTurn = player;
-        }
-
-        [Test]
-        public void TakeTurnInvokesTurnEnded()
-        {
-            Player playa = new Player();
-            playa.TurnEnded += OnTurnEnded;
-            Assert.AreEqual(null, _lastPlayerToEndTurn);
-            playa.TakeTurn();
-            Assert.AreEqual(playa, _lastPlayerToEndTurn);
+            player.Position = position;
+            player.TakeTurn();
+            return player.Position;
         }
     }
 }

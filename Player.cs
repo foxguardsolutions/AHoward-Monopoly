@@ -1,37 +1,35 @@
-﻿using System;
-
-namespace Monopoly
+﻿namespace Monopoly
 {
-    public delegate void TurnEndedDelegate(Player player);
-
-    public class Player
+    public class Player : IPlayer
     {
         private int _position;
         private int _minDieRoll = 1, _maxDieRoll = 6;
         public string Name { get; }
-        public event TurnEndedDelegate TurnEnded;
 
+        public IBoard GameBoard { get; }
+        public IRandomGenerator Generator { get; }
         public int Position
         {
             get { return _position; }
-            set { _position = value % Board.PropertyCount; }
+            set { _position = value % GameBoard.PropertyCount; }
         }
 
-        public Player(string name = "", int position = 0)
+        public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
+            Generator = generator;
+            GameBoard = gameBoard;
             Name = name;
-            Position = position;
+            Position = 0;
         }
 
         public int RollDie()
         {
-            return Monopoly.Generator.Next(_minDieRoll, _maxDieRoll + 1);
+            return Generator.Next(_minDieRoll, _maxDieRoll);
         }
 
         public void TakeTurn()
         {
             Position += RollDie() + RollDie();
-            TurnEnded?.Invoke(this);
         }
     }
 }
