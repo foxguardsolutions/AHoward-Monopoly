@@ -5,8 +5,8 @@ namespace Monopoly
     public interface IPlayerDeque
     {
         int Count { get; }
-        IPlayer CurrentPlayer { get; }
+        IPlayer PreviousPlayer { get; }
         void Shuffle();
-        void AdvanceDeque();
+        void TakeTurn();
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="GameTests.cs" />
     <Compile Include="IBoard.cs" />
     <Compile Include="IGame.cs" />
+    <Compile Include="Injector.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="IPlayerDeque.cs" />
     <Compile Include="IPlayerFactory.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="IPropertyFactory.cs" />
     <Compile Include="IRandomGenerator.cs" />
     <Compile Include="MonopolyCLI.cs" />
+    <Compile Include="MonopolyTests.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerDeque.cs" />
     <Compile Include="PlayerDequeTests.cs" />
