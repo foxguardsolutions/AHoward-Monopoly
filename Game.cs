@@ -17,7 +17,8 @@ namespace Monopoly
                 { "Send Player To Jail", SendPlayerToJail },
                 { "Pay Income Tax", CollectIncomeTax },
                 { "Pay Luxury Tax", CollectLuxuryTax },
-                { "Regular Property Action", PerformRegularPropertyAction }
+                { "Regular Property Action", PerformRegularPropertyAction },
+                { "Utility Action", PerformUtilityAction }
             };
         }
 
@@ -39,7 +40,7 @@ namespace Monopoly
             }
         }
 
-        private void TakeTurn(IPlayer player)
+        public void TakeTurn(IPlayer player)
         {
             AdvancePlayer(player);
             Players.AdvanceDeque();
@@ -99,13 +100,23 @@ namespace Monopoly
 
         private void PerformRegularPropertyAction(IPlayer player, IProperty currentProperty)
         {
+            BuyOrPayRent(player, currentProperty, PayRent);
+        }
+
+        private void PerformUtilityAction(IPlayer player, IProperty currentProperty)
+        {
+            BuyOrPayRent(player, currentProperty, PayUtility);
+        }
+
+        private void BuyOrPayRent(IPlayer player, IProperty currentProperty, Action<IPlayer, IProperty> rentFunction)
+        {
             if (!currentProperty.IsOwned())
             {
                 BuyProperty(player, currentProperty);
             }
             else if (currentProperty.Owner != player)
             {
-                PayRent(player, currentProperty);
+                rentFunction(player, currentProperty);
             }
         }
 
@@ -134,6 +145,18 @@ namespace Monopoly
                 player.Name,
                 rentAmmount,
                 currentProperty.Owner.Name);
+        }
+
+        private void PayUtility(IPlayer player, IProperty currentProperty)
+        {
+            var playerOwedMoney = currentProperty.Owner;
+            var group = GameBoard.GetGroupFromProperty(currentProperty);
+            int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
+            int modifier = (ownedProperties == 1) ? 4 : 10;
+            int rentAmmount = modifier * player.LastDiceRoll;
+
+            player.Money -= rentAmmount;
+            playerOwedMoney.Money += rentAmmount;
         }
     }
 }

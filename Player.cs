@@ -16,6 +16,8 @@
 
         public int Money { get; set; } = 0;
 
+        public int LastDiceRoll { get; set; } = 0;
+
         public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
             Generator = generator;
@@ -31,7 +33,8 @@
 
         public int RollBothDice()
         {
-            return RollDie() + RollDie();
+            LastDiceRoll = RollDie() + RollDie();
+            return LastDiceRoll;
         }
     }
 }

@@ -70,5 +70,27 @@ namespace Monopoly
             return player.Money == fundsAvailable - property.Price
                    && property.Owner == player;
         }
+
+        [Test]
+        public void UtilityRentIsAFunctionOfLastDiceRollAndUtilitiesOwned()
+        {
+            var playera = playerDeque.CurrentPlayer;
+            playera.Money = 500;
+            playera.Position = 8;
+            game.TakeTurn(playera);
+
+            var playerb = playerDeque.CurrentPlayer;
+            playerb.Money = 500;
+            playerb.Position = 8;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - (4 * 4), playerb.Money);
+
+            playera.Position = 24;
+            game.TakeTurn(playera);
+            playerb.Position = 24;
+            playerb.Money = 500;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - (10 * 4), playerb.Money);
+        }
     }
 }

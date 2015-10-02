@@ -7,6 +7,7 @@
         int Money { get; set; }
         IBoard GameBoard { get; }
         IRandomGenerator Generator { get; }
+        int LastDiceRoll { get; set; }
 
         int RollDie();
         int RollBothDice();
