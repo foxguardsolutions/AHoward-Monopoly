@@ -27,7 +27,7 @@ namespace Monopoly
             foreach (var group in groups)
             {
                 Assert.AreEqual(2, group.Properties.Length);
-                Assert.AreEqual(null, group.Owners);
+                Assert.AreEqual(0, group.Owners.Length);
                 Assert.AreEqual(typeof(Property), group.Properties[0].GetType());
             }
         }
