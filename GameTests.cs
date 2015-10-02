@@ -92,5 +92,41 @@ namespace Monopoly
             game.TakeTurn(playerb);
             Assert.AreEqual(500 - (10 * 4), playerb.Money);
         }
+
+        [Test]
+        public void RailRoadRentIsAFunctionOfRailRoadsOwned()
+        {
+            var playera = playerDeque.CurrentPlayer;
+            playera.Money = 10000;
+            playera.Position = 1;
+            game.TakeTurn(playera);
+
+            var playerb = playerDeque.CurrentPlayer;
+            playerb.Money = 500;
+            playerb.Position = 1;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - 25, playerb.Money);
+
+            playera.Position = 11;
+            game.TakeTurn(playera);
+            playerb.Position = 11;
+            playerb.Money = 500;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - 50, playerb.Money);
+
+            playera.Position = 21;
+            game.TakeTurn(playera);
+            playerb.Position = 21;
+            playerb.Money = 500;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - 100, playerb.Money);
+
+            playera.Position = 31;
+            game.TakeTurn(playera);
+            playerb.Position = 31;
+            playerb.Money = 500;
+            game.TakeTurn(playerb);
+            Assert.AreEqual(500 - 200, playerb.Money);
+        }
     }
 }

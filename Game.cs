@@ -18,7 +18,8 @@ namespace Monopoly
                 { "Pay Income Tax", CollectIncomeTax },
                 { "Pay Luxury Tax", CollectLuxuryTax },
                 { "Regular Property Action", PerformRegularPropertyAction },
-                { "Utility Action", PerformUtilityAction }
+                { "Utility Action", PerformUtilityAction },
+                { "RailRoad Action", PerformRailRoadAction }
             };
         }
 
@@ -108,6 +109,11 @@ namespace Monopoly
             BuyOrPayRent(player, currentProperty, PayUtility);
         }
 
+        private void PerformRailRoadAction(IPlayer player, IProperty currentProperty)
+        {
+            BuyOrPayRent(player, currentProperty, PayRailRoadToll);
+        }
+
         private void BuyOrPayRent(IPlayer player, IProperty currentProperty, Action<IPlayer, IProperty> rentFunction)
         {
             if (!currentProperty.IsOwned())
@@ -135,16 +141,20 @@ namespace Monopoly
             }
         }
 
+        private void PayRentAmmount(IPlayer toPlayer, IPlayer fromPlayer, int ammount)
+        {
+            toPlayer.Money += ammount;
+            fromPlayer.Money -= ammount;
+            Console.WriteLine(
+               "{0} paid ${1} to {2}",
+               fromPlayer.Name,
+               ammount,
+               toPlayer.Name);
+        }
+
         private void PayRent(IPlayer player, IProperty currentProperty)
         {
-            int rentAmmount = GameBoard.CalculateRent(currentProperty);
-            currentProperty.Owner.Money += rentAmmount;
-            player.Money -= rentAmmount;
-            Console.WriteLine(
-                "{0} paid ${1} to {2}",
-                player.Name,
-                rentAmmount,
-                currentProperty.Owner.Name);
+            PayRentAmmount(currentProperty.Owner, player, GameBoard.CalculateRent(currentProperty));
         }
 
         private void PayUtility(IPlayer player, IProperty currentProperty)
@@ -153,10 +163,21 @@ namespace Monopoly
             var group = GameBoard.GetGroupFromProperty(currentProperty);
             int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
             int modifier = (ownedProperties == 1) ? 4 : 10;
-            int rentAmmount = modifier * player.LastDiceRoll;
+            PayRentAmmount(playerOwedMoney, player, modifier * player.LastDiceRoll);
+        }
 
-            player.Money -= rentAmmount;
-            playerOwedMoney.Money += rentAmmount;
+        private void PayRailRoadToll(IPlayer player, IProperty currentProperty)
+        {
+            var playerOwedMoney = currentProperty.Owner;
+            var group = GameBoard.GetGroupFromProperty(currentProperty);
+            int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
+            int rentAmmount = 25;
+            for (var i = 1; i < ownedProperties; i++)
+            {
+                rentAmmount *= 2;
+            }
+
+            PayRentAmmount(playerOwedMoney, player, rentAmmount);
         }
     }
 }
