@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -20,7 +21,7 @@ namespace Monopoly
                 "a", "b", "c"
             };
 
-            gameBoard = new Board(new PropertyFactory(properties));
+            gameBoard = new Board(File.ReadAllText("json\\propertyGroupsTests.json"));
             players = new string[]
             {
                 "a", "b", "c", "d"

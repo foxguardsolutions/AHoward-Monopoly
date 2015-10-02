@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using NUnit.Framework;
 
 namespace Monopoly
 {
@@ -14,19 +15,8 @@ namespace Monopoly
         public void Setup()
         {
             generator = new RandomGeneratorMoc();
-            string[] properties =
-            {
-                "Go",
-                "Connecticut Avenue",
-                "Jail",
-                "Go To Jail",
-                "Pacific Avenue",
-                "Income Tax",
-                "Luxury Tax",
-                "Boardwalk",
-            };
-
-            gameBoard = new Board(new PropertyFactory(properties));
+            string data = File.ReadAllText("json\\propertyGroups.json");
+            gameBoard = new Board(data);
             string[] players =
             {
                 "a", "b", "c", "d", "e"
@@ -50,13 +40,13 @@ namespace Monopoly
         public void AdvancePlayerMovesPlayerToJailWhenLandingOnGoToJail()
         {
             Player player = new Player(generator, gameBoard, "a");
-            player.Position = 7;
+            player.Position = 26;
             game.AdvancePlayer(player);
-            Assert.AreEqual(2, player.Position);
+            Assert.AreEqual(10, player.Position);
         }
 
-        [TestCase(5)]
-        [TestCase(4)]
+        [TestCase(39)]
+        [TestCase(36)]
         public void AdvancePlayerGivesPlayer200DollarsForPassingOrLandingOnGo(int start)
         {
             Player player = new Player(generator, gameBoard, "A");

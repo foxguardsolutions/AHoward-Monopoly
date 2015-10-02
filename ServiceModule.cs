@@ -1,4 +1,5 @@
-﻿using Ninject.Modules;
+﻿using System.IO;
+using Ninject.Modules;
 
 namespace Monopoly
 {
@@ -57,9 +58,9 @@ namespace Monopoly
         public override void Load()
         {
             Bind<IRandomGenerator>().To<RandomGenerator>();
-            Bind<IPropertyFactory>().To<PropertyFactory>()
-                .WithConstructorArgument("names", _propertyNames);
-            Bind<IBoard>().To<Board>();
+            Bind<IPropertyGroup>().To<PropertyGroup>();
+            Bind<IBoard>().To<Board>()
+                .WithConstructorArgument("propertyGroupData", File.ReadAllText("json\\propertyGroups.json"));
             Bind<IPlayerFactory>().To<PlayerFactory>()
                 .WithConstructorArgument("names", _playerNames);
             Bind<IPlayerDeque>().To<PlayerDeque>();
