@@ -9,5 +9,8 @@
         bool HasSingleOwner();
         IProperty GetPropertyFromPropertyIndex(int index);
         IProperty GetPropertyFromName(string name);
+        void AddOwner(IPlayer player);
+        IProperty[] GetPropertiesInGroupOwnedByPlayer(IPlayer player);
+        int GetNumberOfPropertiesInGroupOwnedByPlayer(IPlayer player);
     }
 }

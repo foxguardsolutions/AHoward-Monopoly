@@ -51,5 +51,38 @@ namespace Monopoly
         {
             return nameToGroupMapping[name].GetPropertyFromName(name);
         }
+
+        public void PlayerPurchasedProperty(IPlayer player, IProperty property)
+        {
+            nameToGroupMapping[property.Name].AddOwner(player);
+            property.Owner = player;
+        }
+
+        public int CalculateRent(IProperty property)
+        {
+            if (property.Mortgaged)
+            {
+                return 0;
+            }
+
+            var group = nameToGroupMapping[property.Name];
+            if (group.AllPropertiesOwned() && group.HasSingleOwner())
+            {
+                return property.Rent * 2;
+            }
+
+            return property.Rent;
+        }
+
+        public IProperty[] GetAllPropertiesOwnedByPlayer(IPlayer player)
+        {
+            IProperty[] ownedProperties = { };
+            foreach (var group in PropertyGroups)
+            {
+                ownedProperties = ownedProperties.Concat(group.GetPropertiesInGroupOwnedByPlayer(player)).ToArray();
+            }
+
+            return ownedProperties;
+        }
     }
 }

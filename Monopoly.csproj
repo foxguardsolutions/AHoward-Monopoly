@@ -82,7 +82,6 @@
     <Compile Include="IPlayerDeque.cs" />
     <Compile Include="IPlayerFactory.cs" />
     <Compile Include="IProperty.cs" />
-    <Compile Include="IPropertyFactory.cs" />
     <Compile Include="IPropertyGroup.cs" />
     <Compile Include="IRandomGenerator.cs" />
     <Compile Include="MonopolyCLI.cs" />

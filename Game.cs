@@ -17,6 +17,7 @@ namespace Monopoly
                 { "Send Player To Jail", SendPlayerToJail },
                 { "Pay Income Tax", CollectIncomeTax },
                 { "Pay Luxury Tax", CollectLuxuryTax },
+                { "Regular Property Action", PerformRegularPropertyAction }
             };
         }
 
@@ -94,6 +95,40 @@ namespace Monopoly
         {
             player.Money -= 75;
             Console.WriteLine("Luxary tax Collected, {0} net worth is now ${1}", player.Name, player.Money);
+        }
+
+        private void PerformRegularPropertyAction(IPlayer player, IProperty currentProperty)
+        {
+            if (!currentProperty.IsOwned())
+            {
+                BuyProperty(player, currentProperty);
+            }
+            else if (currentProperty.Owner != player)
+            {
+                PayRent(player, currentProperty);
+            }
+        }
+
+        private void BuyProperty(IPlayer player, IProperty currentProperty)
+        {
+            // This is not a requirement, but a good life decision
+            if (player.Money - currentProperty.Price > 100)
+            {
+                player.Money -= currentProperty.Price;
+                GameBoard.PlayerPurchasedProperty(player, currentProperty);
+                Console.WriteLine(
+                    "'{0}' bought '{1}' for ${2}",
+                    player.Name,
+                    currentProperty.Name,
+                    currentProperty.Price);
+            }
+        }
+
+        private void PayRent(IPlayer player, IProperty currentProperty)
+        {
+            int rentAmmount = GameBoard.CalculateRent(currentProperty);
+            currentProperty.Owner.Money += rentAmmount;
+            player.Money -= rentAmmount;
         }
     }
 }
