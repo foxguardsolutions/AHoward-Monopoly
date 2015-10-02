@@ -87,7 +87,7 @@ namespace Monopoly
 
         private void CollectIncomeTax(IPlayer player, IProperty currentProperty)
         {
-            player.Money -= Math.Min(player.Money * 0.20, 200);
+            player.Money -= Math.Min((int)(player.Money * 0.20), 200);
             Console.WriteLine("Income Tax Collected, '{0}' net worth is now ${1}", player.Name, player.Money);
         }
 
@@ -133,8 +133,7 @@ namespace Monopoly
                 "{0} paid ${1} to {2}",
                 player.Name,
                 rentAmmount,
-                currentProperty.Owner.Name
-                );
+                currentProperty.Owner.Name);
         }
     }
 }
