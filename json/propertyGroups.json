@@ -124,7 +124,7 @@
                 "Name": "Reading RailRoad",
                 "Price": 200,
                 "Rent": 25,
-                "Action": "Regular Property Action",
+                "Action": "RailRoad Action",
                 "MapIndex": 5
             },
             {
@@ -132,7 +132,7 @@
                 "Name": "Pennsylvania RailRoad",
                 "Price": 200,
                 "Rent": 25,
-                "Action": "Regular Property Action",
+                "Action": "RailRoad Action",
                 "MapIndex": 15
             },
             {
@@ -140,7 +140,7 @@
                 "Name": "B. & O. RailRoad",
                 "Price": 200,
                 "Rent": 25,
-                "Action": "Regular Property Action",
+                "Action": "RailRoad Action",
                 "MapIndex": 25
             },
             {
@@ -148,7 +148,7 @@
                 "Name": "Short Line RailRoad",
                 "Price": 200,
                 "Rent": 25,
-                "Action": "Regular Property Action",
+                "Action": "RailRoad Action",
                 "MapIndex": 35
             }
         ]
