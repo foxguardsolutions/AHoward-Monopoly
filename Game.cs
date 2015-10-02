@@ -129,6 +129,12 @@ namespace Monopoly
             int rentAmmount = GameBoard.CalculateRent(currentProperty);
             currentProperty.Owner.Money += rentAmmount;
             player.Money -= rentAmmount;
+            Console.WriteLine(
+                "{0} paid ${1} to {2}",
+                player.Name,
+                rentAmmount,
+                currentProperty.Owner.Name
+                );
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Monopoly
             Assert.AreEqual(10, player.Position);
         }
 
-        [TestCase(39)]
+        [TestCase(38)]
         [TestCase(36)]
         public void AdvancePlayerGivesPlayer200DollarsForPassingOrLandingOnGo(int start)
         {
@@ -54,6 +54,21 @@ namespace Monopoly
             Assert.AreEqual(0, player.Money);
             game.AdvancePlayer(player);
             Assert.AreEqual(200, player.Money);
+        }
+
+        [TestCase(300, Result = true)]
+        [TestCase(200, Result = false)]
+        public bool PlayerBuysPropertyWhenAppropriateFundsAreAvailable(int fundsAvailable)
+        {
+            var player = playerDeque.CurrentPlayer;
+            player.Money = fundsAvailable;
+            player.Position = 2;
+            game.AdvancePlayer(player);
+
+            var property = gameBoard.GetPropertyFromIndex(player.Position);
+
+            return player.Money == fundsAvailable - property.Price
+                   && property.Owner == player;
         }
     }
 }
