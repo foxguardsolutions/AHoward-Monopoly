@@ -64,7 +64,7 @@ namespace Monopoly
             Bind<IPlayerFactory>().To<PlayerFactory>()
                 .WithConstructorArgument("names", _playerNames);
             Bind<IPlayerDeque>().To<PlayerDeque>();
-            Bind<IGame>().To<Game>();
+            Bind<IGame>().To<Game>().InSingletonScope();
         }
     }
 }
