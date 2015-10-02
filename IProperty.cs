@@ -9,5 +9,7 @@
         bool Mortgaged { get; set; }
         string Action { get; }
         int MapIndex { get; }
+
+        bool IsOwned();
     }
 }

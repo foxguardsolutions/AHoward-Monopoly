@@ -19,5 +19,10 @@
             MapIndex = mapIndex;
             Owner = null;
         }
+
+        public bool IsOwned()
+        {
+            return Owner != null;
+        }
     }
 }

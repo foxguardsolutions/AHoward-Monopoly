@@ -103,7 +103,7 @@
                 "Name": "Mediterranean Avenue",
                 "Price": 60,
                 "Rent": 20,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 1
             },
             {
@@ -111,7 +111,7 @@
                 "Name": "Oriental Avenue",
                 "Price": 60,
                 "Rent": 20,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 3
             }
 
@@ -123,32 +123,32 @@
                 "$type": "Monopoly.Property, ConsoleApplication",
                 "Name": "Reading RailRoad",
                 "Price": 200,
-                "Rent": 80,
-                "Action": "Pay Rent",
+                "Rent": 25,
+                "Action": "Regular Property Action",
                 "MapIndex": 5
             },
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
                 "Name": "Pennsylvania RailRoad",
                 "Price": 200,
-                "Rent": 80,
-                "Action": "Pay Rent",
+                "Rent": 25,
+                "Action": "Regular Property Action",
                 "MapIndex": 15
             },
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
                 "Name": "B. & O. RailRoad",
                 "Price": 200,
-                "Rent": 80,
-                "Action": "Pay Rent",
+                "Rent": 25,
+                "Action": "Regular Property Action",
                 "MapIndex": 25
             },
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
                 "Name": "Short Line RailRoad",
                 "Price": 200,
-                "Rent": 80,
-                "Action": "Pay Rent",
+                "Rent": 25,
+                "Action": "Regular Property Action",
                 "MapIndex": 35
             }
         ]
@@ -160,7 +160,7 @@
                 "Name": "China Avenue",
                 "Price": 100,
                 "Rent": 30,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 6
             },
             {
@@ -168,7 +168,7 @@
                 "Name": "Vermont Avenue",
                 "Price": 100,
                 "Rent": 30,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 8
             },
             {
@@ -176,7 +176,7 @@
                 "Name": "Connecticut Avenue",
                 "Price": 120,
                 "Rent": 40,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 9
             }
         ]
@@ -188,7 +188,7 @@
                 "Name": "St. Charles Place",
                 "Price": 140,
                 "Rent": 50,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 11
             },
             {
@@ -196,7 +196,7 @@
                 "Name": "States Avenue",
                 "Price": 140,
                 "Rent": 50,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 13
             },
             {
@@ -204,7 +204,7 @@
                 "Name": "Virginia Avenue",
                 "Price": 160,
                 "Rent": 60,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 14
             }
         ]
@@ -216,7 +216,7 @@
                 "Name": "St. James Place",
                 "Price": 180,
                 "Rent": 70,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 16
             },
             {
@@ -224,7 +224,7 @@
                 "Name": "Tennesse Avenue",
                 "Price": 180,
                 "Rent": 70,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 18
             },
             {
@@ -232,7 +232,7 @@
                 "Name": "New York Avenue",
                 "Price": 200,
                 "Rent": 80,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 19
             }
         ]
@@ -244,7 +244,7 @@
                 "Name": "Kentucky Avenue",
                 "Price": 220,
                 "Rent": 90,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 21
             },
             {
@@ -252,7 +252,7 @@
                 "Name": "Indianna Avenue",
                 "Price": 220,
                 "Rent": 90,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 23
             },
             {
@@ -260,7 +260,7 @@
                 "Name": "Illinois Avenue",
                 "Price": 240,
                 "Rent": 100,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 24
             }
         ]
@@ -272,7 +272,7 @@
                 "Name": "Atlantic Avenue",
                 "Price": 260,
                 "Rent": 110,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 26
             },
             {
@@ -280,7 +280,7 @@
                 "Name": "Ventnor Avenue",
                 "Price": 260,
                 "Rent": 110,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 27
             },
             {
@@ -288,7 +288,7 @@
                 "Name": "Illinois Avenue",
                 "Price": 280,
                 "Rent": 120,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 29
             }
         ]
@@ -300,7 +300,7 @@
                 "Name": "Pacific Avenue",
                 "Price": 300,
                 "Rent": 130,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 31
             },
             {
@@ -308,7 +308,7 @@
                 "Name": "North Carolina Avenue",
                 "Price": 300,
                 "Rent": 130,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 32
             },
             {
@@ -316,7 +316,7 @@
                 "Name": "Pennsatucky Avenue",
                 "Price": 320,
                 "Rent": 140,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 34
             }
         ]
@@ -328,7 +328,7 @@
                 "Name": "Park Place",
                 "Price": 350,
                 "Rent": 180,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 37
             },
             {
@@ -336,7 +336,7 @@
                 "Name": "Boardwalk",
                 "Price": 400,
                 "Rent": 230,
-                "Action": "Pay Rent",
+                "Action": "Regular Property Action",
                 "MapIndex": 39
             }
         ]
@@ -348,7 +348,7 @@
                 "Name": "Electric Company",
                 "Price": 150,
                 "Rent": 100,
-                "Action": "Pay Rent",
+                "Action": "Utility Action",
                 "MapIndex": 12
             },
             {
@@ -356,7 +356,7 @@
                 "Name": "Water Works",
                 "Price": 150,
                 "Rent": 100,
-                "Action": "Pay Rent",
+                "Action": "Utility Action",
                 "MapIndex": 28
             }
         ]

@@ -70,5 +70,39 @@ namespace Monopoly
 
             return group.HasSingleOwner();
         }
+
+        [Test]
+        public void AddOwnerAddsAnotherOwnerToListOfOwners()
+        {
+            Assert.AreEqual(0, group.Owners.Length);
+            group.AddOwner(players[0]);
+            Assert.AreEqual(1, group.Owners.Length);
+            Assert.AreEqual(players[0], group.Owners[0]);
+            group.AddOwner(players[1]);
+            Assert.AreEqual(2, group.Owners.Length);
+            Assert.AreEqual(players[1], group.Owners[1]);
+            group.AddOwner(players[0]);
+            Assert.AreEqual(2, group.Owners.Length);
+        }
+
+        [Test]
+        public void GetPropertiesOwnedByPlayerReturnsAllPropertiesOwnedByPlayer()
+        {
+            var ownedProperties = new IProperty[] { };
+            Assert.IsTrue(ownedProperties.SequenceEqual(group.GetPropertiesInGroupOwnedByPlayer(players[0])));
+            properties[0].Owner = players[0];
+            ownedProperties = new IProperty[] { properties[0] };
+            Assert.IsTrue(ownedProperties.SequenceEqual(group.GetPropertiesInGroupOwnedByPlayer(players[0])));
+        }
+
+        [Test]
+        public void GetNumberOfPropertiesOwnedByPlayerReturnsCountOfAllPropertiesOwnedByPlayer()
+        {
+            Assert.AreEqual(0, group.GetNumberOfPropertiesInGroupOwnedByPlayer(players[0]));
+            properties[0].Owner = players[0];
+            Assert.AreEqual(1, group.GetNumberOfPropertiesInGroupOwnedByPlayer(players[0]));
+            properties[1].Owner = players[0];
+            Assert.AreEqual(2, group.GetNumberOfPropertiesInGroupOwnedByPlayer(players[0]));
+        }
     }
 }
