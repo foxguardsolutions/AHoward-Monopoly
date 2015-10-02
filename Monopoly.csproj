@@ -37,6 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>packages\Ninject.3.2.2.0\lib\net40\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -53,8 +57,19 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+    <None Include="json\propertyGroups.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="json\propertyGroupsTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Monopoly.ruleset" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.cs" />
@@ -68,6 +83,7 @@
     <Compile Include="IPlayerFactory.cs" />
     <Compile Include="IProperty.cs" />
     <Compile Include="IPropertyFactory.cs" />
+    <Compile Include="IPropertyGroup.cs" />
     <Compile Include="IRandomGenerator.cs" />
     <Compile Include="MonopolyCLI.cs" />
     <Compile Include="Player.cs" />
@@ -75,8 +91,16 @@
     <Compile Include="PlayerDequeTests.cs" />
     <Compile Include="PlayerFactory.cs" />
     <Compile Include="PlayerTests.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Property.cs" />
-    <Compile Include="PropertyFactory.cs" />
+    <Compile Include="PropertyGroup.cs" />
+    <Compile Include="PropertyGroupFactory.cs" />
+    <Compile Include="PropertyGroupFactoryTests.cs" />
+    <Compile Include="PropertyGroupTests.cs" />
     <Compile Include="PropertyTests.cs" />
     <Compile Include="RandomGenerator.cs" />
     <Compile Include="RandomGeneratorMoc.cs" />

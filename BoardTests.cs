@@ -1,64 +1,50 @@
-﻿using NUnit.Framework;
+﻿using System.IO;
+using NUnit.Framework;
 
 namespace Monopoly
 {
     [TestFixture]
     public class BoardTests
     {
-        [TestCase("a", Result = 1)]
-        [TestCase("a", "b", Result = 2)]
-        [TestCase("a", "b", "c", Result = 3)]
-        [TestCase("a", "b", "c", "d", Result = 4)]
-        public int PropertyCountEqualsNumberOfProperties(params string[] names)
+        private IBoard board;
+
+        [SetUp]
+        public void Setup()
         {
-            IBoard board = new Board(new PropertyFactory(names));
-            return board.PropertyCount;
+            board = new Board(File.ReadAllText("json\\propertyGroupsTests.json"));
         }
 
-        [TestCase("a", "a", "b", "c", "d", Result = 0)]
-        [TestCase("b", "a", "b", "c", "d", Result = 1)]
-        [TestCase("c", "a", "b", "c", "d", Result = 2)]
-        [TestCase("d", "a", "b", "c", "d", Result = 3)]
-        public int GetPropertyPositionFromNameReturnsCorrectIndex(string toFind, params string[] names)
+        [Test]
+        public void PropertyCountEqualsNumberOfProperties()
         {
-            IBoard board = new Board(new PropertyFactory(names));
+            Assert.AreEqual(4, board.PropertyCount);
+        }
+
+        [TestCase("Park Place", Result = 10)]
+        [TestCase("Boulevard", Result = 12)]
+        [TestCase("Other Place", Result = 9)]
+        [TestCase("Another Boulevard", Result = 8)]
+        public int GetPropertyPositionFromNameReturnsCorrectIndex(string toFind)
+        {
             return board.GetPropertyPositionFromName(toFind);
         }
 
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        public void GetPropertyFromIndexReturnsCorrectProperty(int index)
+        [TestCase(0, 0, 10)]
+        [TestCase(0, 1, 12)]
+        [TestCase(1, 0, 9)]
+        [TestCase(1, 1, 8)]
+        public void GetPropertyFromIndexReturnsCorrectProperty(int groupIndex, int propertyIndex, int mapIndex)
         {
-            IProperty[] properties =
-            {
-                new Property("a"),
-                new Property("b"),
-                new Property("c"),
-                new Property("d"),
-            };
-            IBoard board = new Board(new PropertyFactory(new string[] { }));
-            board.Properties = properties;
-            Assert.AreEqual(properties[index], board.GetPropertyFromIndex(index));
+            Assert.AreEqual(board.PropertyGroups[groupIndex].Properties[propertyIndex], board.GetPropertyFromIndex(mapIndex));
         }
 
-        [TestCase("a", 0)]
-        [TestCase("b", 1)]
-        [TestCase("c", 2)]
-        [TestCase("d", 3)]
-        public void GetPropertyFromNameReturnsCorrectProperty(string name, int expectedIndex)
+        [TestCase("Park Place", 0, 0)]
+        [TestCase("Boulevard", 0, 1)]
+        [TestCase("Other Place", 1, 0)]
+        [TestCase("Another Boulevard", 1, 1)]
+        public void GetPropertyFromNameReturnsCorrectProperty(string name, int groupIndex, int propertyIndex)
         {
-            IProperty[] properties =
-            {
-                new Property("a"),
-                new Property("b"),
-                new Property("c"),
-                new Property("d"),
-            };
-            IBoard board = new Board(new PropertyFactory(new string[] { }));
-            board.Properties = properties;
-            Assert.AreEqual(properties[expectedIndex], board.GetPropertyFromName(name));
+            Assert.AreEqual(board.PropertyGroups[groupIndex].Properties[propertyIndex], board.GetPropertyFromName(name));
         }
     }
 }

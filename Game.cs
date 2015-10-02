@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Monopoly
 {
     public class Game : IGame
     {
-        private IProperty[] properties;
-        private Dictionary<IProperty, Action<IPlayer, IProperty>> actionProperties;
+        private Dictionary<string, Action<IPlayer, IProperty>> actionProperties;
         public IBoard GameBoard { get; }
         public IPlayerDeque Players { get; set; } = null;
 
         public Game(IBoard gameBoard)
         {
             GameBoard = gameBoard;
-            properties = gameBoard.Properties;
-            actionProperties = new Dictionary<IProperty, Action<IPlayer, IProperty>>()
+            actionProperties = new Dictionary<string, Action<IPlayer, IProperty>>()
             {
-                { GameBoard.GetPropertyFromName("Go To Jail"), SendPlayerToJail },
-                { GameBoard.GetPropertyFromName("Income Tax"), CollectIncomeTax },
-                { GameBoard.GetPropertyFromName("Luxury Tax"), CollectLuxuryTax },
+                { "Send Player To Jail", SendPlayerToJail },
+                { "Pay Income Tax", CollectIncomeTax },
+                { "Pay Luxury Tax", CollectLuxuryTax },
             };
         }
 
@@ -66,9 +63,10 @@ namespace Monopoly
         private void PerformActions(IPlayer player, IProperty currentProperty)
         {
             PrintPlayerPosition(player, currentProperty);
-            if (actionProperties.ContainsKey(currentProperty))
+            var action = currentProperty.Action ?? string.Empty;
+            if (actionProperties.ContainsKey(action))
             {
-                actionProperties[currentProperty](player, currentProperty);
+                actionProperties[action](player, currentProperty);
             }
         }
 

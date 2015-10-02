@@ -2,7 +2,7 @@
 {
     public interface IBoard
     {
-        IProperty[] Properties { get; set; }
+        IPropertyGroup[] PropertyGroups { get; set; }
         int PropertyCount { get; }
 
         int GetPropertyPositionFromName(string name);
