@@ -128,5 +128,44 @@ namespace Monopoly
             game.TakeTurn(playerb);
             Assert.AreEqual(500 - 200, playerb.Money);
         }
+
+        [Test]
+        public void BeginTurnAttemptsToMortgageAPropertyIfPlayerHasLessThan100Dollars()
+        {
+            var player = playerDeque.CurrentPlayer;
+            player.Money = 10;
+            var property = gameBoard.GetPropertyFromName("Boardwalk");
+            gameBoard.PlayerPurchasedProperty(player, property);
+            property.Owner = player;
+            game.BeginPlayerTurn(player);
+
+            Assert.IsTrue(property.Mortgaged);
+            Assert.AreEqual(310, player.Money);
+        }
+
+        [Test]
+        public void EndTurnAttemptsToUnMortgageAllPropertiesIfPlayerHasEnoughMoney()
+        {
+            var player = playerDeque.CurrentPlayer;
+            player.Money = 600;
+            var boardwalk = gameBoard.GetPropertyFromName("Boardwalk");
+            var parkPlace = gameBoard.GetPropertyFromName("Park Place");
+            var railroad = gameBoard.GetPropertyFromName("Reading RailRoad");
+            gameBoard.PlayerPurchasedProperty(player, boardwalk);
+            gameBoard.PlayerPurchasedProperty(player, parkPlace);
+            gameBoard.PlayerPurchasedProperty(player, railroad);
+            boardwalk.Owner = player;
+            parkPlace.Owner = player;
+            railroad.Owner = player;
+            boardwalk.Mortgaged = true;
+            parkPlace.Mortgaged = true;
+            railroad.Mortgaged = true;
+            game.EndPlayerTurn(player);
+
+            Assert.IsFalse(parkPlace.Mortgaged);
+            Assert.IsTrue(boardwalk.Mortgaged);
+            Assert.IsFalse(railroad.Mortgaged);
+            Assert.AreEqual(50, player.Money);
+        }
     }
 }

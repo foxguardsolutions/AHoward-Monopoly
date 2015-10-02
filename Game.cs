@@ -43,8 +43,41 @@ namespace Monopoly
 
         public void TakeTurn(IPlayer player)
         {
+            BeginPlayerTurn(player);
             AdvancePlayer(player);
+            EndPlayerTurn(player);
             Players.AdvanceDeque();
+        }
+
+        public void BeginPlayerTurn(IPlayer player)
+        {
+            if (player.Money < 100)
+            {
+                var properties = GameBoard.GetAllPropertiesOwnedByPlayer(player);
+                foreach (var property in properties)
+                {
+                    if (!property.Mortgaged)
+                    {
+                        MortgageProperty(property, player);
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void EndPlayerTurn(IPlayer player)
+        {
+            if (player.Money > 200)
+            {
+                var properties = GameBoard.GetAllPropertiesOwnedByPlayer(player);
+                foreach (var property in properties)
+                {
+                    if (property.Mortgaged && player.Money > 200)
+                    {
+                        UnMortgageProperty(property, player);
+                    }
+                }
+            }
         }
 
         public void AdvancePlayer(IPlayer player)
@@ -178,6 +211,34 @@ namespace Monopoly
             }
 
             PayRentAmmount(playerOwedMoney, player, rentAmmount);
+        }
+
+        private void MortgageProperty(IProperty property, IPlayer player)
+        {
+            if (!property.Mortgaged)
+            {
+                property.Mortgaged = true;
+                player.Money += (int)(property.Price * 0.75);
+                Console.WriteLine(
+                    "{0} mortgaged {1}, net worth is now ${2}",
+                    player.Name,
+                    property.Name,
+                    player.Money);
+            }
+        }
+
+        private void UnMortgageProperty(IProperty property, IPlayer player)
+        {
+            if (property.Mortgaged && player.Money > property.Price)
+            {
+                property.Mortgaged = false;
+                player.Money -= property.Price;
+                Console.WriteLine(
+                    "{0} unmortgaged {1}, net worth is now ${2}",
+                    player.Name,
+                    property.Name,
+                    player.Money);
+            }
         }
     }
 }
