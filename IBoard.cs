@@ -11,5 +11,6 @@
         void PlayerPurchasedProperty(IPlayer player, IProperty property);
         int CalculateRent(IProperty property);
         IProperty[] GetAllPropertiesOwnedByPlayer(IPlayer player);
+        IPropertyGroup GetGroupFromProperty(IProperty property);
     }
 }

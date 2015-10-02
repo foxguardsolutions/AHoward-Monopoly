@@ -84,5 +84,10 @@ namespace Monopoly
 
             return ownedProperties;
         }
+
+        public IPropertyGroup GetGroupFromProperty(IProperty property)
+        {
+            return nameToGroupMapping[property.Name];
+        }
     }
 }
