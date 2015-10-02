@@ -4,7 +4,7 @@
     {
         string Name { get; }
         int Position { get; set; }
-        double Money { get; set; }
+        int Money { get; set; }
         IBoard GameBoard { get; }
         IRandomGenerator Generator { get; }
 

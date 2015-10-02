@@ -14,7 +14,7 @@
             set { _position = value % GameBoard.PropertyCount; }
         }
 
-        public double Money { get; set; } = 0.0;
+        public int Money { get; set; } = 0;
 
         public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
