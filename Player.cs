@@ -14,6 +14,10 @@
             set { _position = value % GameBoard.PropertyCount; }
         }
 
+        public int Money { get; set; } = 0;
+
+        public int LastDiceRoll { get; set; } = 0;
+
         public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
             Generator = generator;
@@ -27,9 +31,10 @@
             return Generator.Next(_minDieRoll, _maxDieRoll);
         }
 
-        public void TakeTurn()
+        public int RollBothDice()
         {
-            Position += RollDie() + RollDie();
+            LastDiceRoll = RollDie() + RollDie();
+            return LastDiceRoll;
         }
     }
 }

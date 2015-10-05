@@ -4,10 +4,12 @@
     {
         string Name { get; }
         int Position { get; set; }
+        int Money { get; set; }
         IBoard GameBoard { get; }
         IRandomGenerator Generator { get; }
+        int LastDiceRoll { get; set; }
 
         int RollDie();
-        void TakeTurn();
+        int RollBothDice();
     }
 }
