@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -20,7 +21,7 @@ namespace Monopoly
                 "a", "b", "c"
             };
 
-            gameBoard = new Board(new PropertyFactory(properties));
+            gameBoard = new Board(File.ReadAllText("json\\propertyGroupsTests.json"));
             players = new string[]
             {
                 "a", "b", "c", "d"
@@ -51,17 +52,6 @@ namespace Monopoly
             PlayerDeque deque = new PlayerDeque(generator, playerFactory);
             var first = deque[0];
             deque.AdvanceDeque();
-            Assert.AreEqual(first, deque[deque.Count - 1]);
-        }
-
-        [Test]
-        public void TakeTurnAdvancesPlayerAndPushesHimToBackOfDeque()
-        {
-            PlayerDeque deque = new PlayerDeque(generator, playerFactory);
-            var first = deque[0];
-            var position = first.Position;
-            deque.TakeTurn();
-            Assert.AreNotEqual(position, first.Position);
             Assert.AreEqual(first, deque[deque.Count - 1]);
         }
     }
