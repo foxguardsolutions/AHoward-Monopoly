@@ -41,14 +41,10 @@ namespace Monopoly
             return player.RollDie();
         }
 
-        [TestCase(0, Result = 4)]
-        [TestCase(1, Result = 0)]
-        [TestCase(2, Result = 1)]
-        public int TakeTurnProperlyIncrementsPlayerPosition(int position)
+        [TestCase(Result = 4)]
+        public int RollBothDiceReturnsNumberBeen2and12()
         {
-            player.Position = position;
-            player.TakeTurn();
-            return player.Position;
+            return player.RollBothDice();
         }
     }
 }

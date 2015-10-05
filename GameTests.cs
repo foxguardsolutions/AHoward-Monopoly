@@ -16,7 +16,14 @@ namespace Monopoly
             generator = new RandomGeneratorMoc();
             string[] properties =
             {
-                "a", "b", "c"
+                "Go",
+                "Connecticut Avenue",
+                "Jail",
+                "Go To Jail",
+                "Pacific Avenue",
+                "Income Tax",
+                "Luxury Tax",
+                "Boardwalk",
             };
 
             gameBoard = new Board(new PropertyFactory(properties));
@@ -31,14 +38,32 @@ namespace Monopoly
         }
 
         [Test]
-        public void PlayAdvancesAllPlayers20RoundsWorthOfPlay()
+        public void AdvancePlayerMovesPlayerForward()
         {
-            game.Play();
-            foreach (var player in playerDeque)
-            {
-                // each die comes up a 2, and we do that 20 times, and there are 3 properties
-                Assert.AreEqual((2 * 2 * 20) % 3, player.Position);
-            }
+            Player player = new Player(generator, gameBoard, "a");
+            Assert.AreEqual(0, player.Position);
+            game.AdvancePlayer(player);
+            Assert.AreEqual(4, player.Position);
+        }
+
+        [Test]
+        public void AdvancePlayerMovesPlayerToJailWhenLandingOnGoToJail()
+        {
+            Player player = new Player(generator, gameBoard, "a");
+            player.Position = 7;
+            game.AdvancePlayer(player);
+            Assert.AreEqual(2, player.Position);
+        }
+
+        [TestCase(5)]
+        [TestCase(4)]
+        public void AdvancePlayerGivesPlayer200DollarsForPassingOrLandingOnGo(int start)
+        {
+            Player player = new Player(generator, gameBoard, "A");
+            player.Position = start;
+            Assert.AreEqual(0, player.Money);
+            game.AdvancePlayer(player);
+            Assert.AreEqual(200, player.Money);
         }
     }
 }

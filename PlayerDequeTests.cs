@@ -53,16 +53,5 @@ namespace Monopoly
             deque.AdvanceDeque();
             Assert.AreEqual(first, deque[deque.Count - 1]);
         }
-
-        [Test]
-        public void TakeTurnAdvancesPlayerAndPushesHimToBackOfDeque()
-        {
-            PlayerDeque deque = new PlayerDeque(generator, playerFactory);
-            var first = deque[0];
-            var position = first.Position;
-            deque.TakeTurn();
-            Assert.AreNotEqual(position, first.Position);
-            Assert.AreEqual(first, deque[deque.Count - 1]);
-        }
     }
 }
