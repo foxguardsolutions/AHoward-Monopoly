@@ -7,9 +7,9 @@ namespace Monopoly
     {
         private readonly IRandomGenerator _generator;
 
-        public IPlayer PreviousPlayer
+        public IPlayer CurrentPlayer
         {
-            get { return this.Last(); }
+            get { return this.First(); }
         }
 
         public PlayerDeque(IRandomGenerator generator, IPlayerFactory playerFactory) : base(playerFactory.GeneratePlayers())
@@ -35,15 +35,6 @@ namespace Monopoly
                 IPlayer player = this[0];
                 Remove(player);
                 Add(player);
-            }
-        }
-
-        public void TakeTurn()
-        {
-            if (Count > 0)
-            {
-                this[0].TakeTurn();
-                AdvanceDeque();
             }
         }
     }
