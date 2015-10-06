@@ -6,6 +6,19 @@ namespace Monopoly
     public class Game : IGame
     {
         private Dictionary<string, Action<IPlayer, IProperty>> actionProperties;
+        private const int _moneyPaidForPassingGo = 200;
+        private const int _moneyPaidToGetOutOfJail = 50;
+        private const int _consecutiveDoublesRolledToGoToJail = 3;
+        private const int _roundsToPlay = 20;
+        private const int _maxRoundsPlayerMayStayInJail = 3;
+        private const int _minMoneyPlayerMustHaveToUnmortgageProperties = 200;
+        private const int _maxMoneyPlayerMustHaveToMortgageProperties = 100;
+        private const int _minMoneyPlayerMustHaveToBuyProperty = 100;
+        private const double _percentagePaidForMortgagingProperty = 0.75;
+        private const double _percentagePaidForUnmortgagingProperty = 1.00;
+        private const double _percentagePaidForIncomeTax = 0.20;
+        private const int _maxIncomeTaxPaid = 200;
+        private const int _luxuryTaxPaid = 75;
         public IBoard GameBoard { get; }
         public IPlayerDeque Players { get; set; } = null;
 
@@ -26,7 +39,7 @@ namespace Monopoly
         public void Play()
         {
             int roundsPlayed = 0;
-            while (roundsPlayed < 20)
+            while (roundsPlayed < _roundsToPlay)
             {
                 PlayRound();
                 roundsPlayed++;
@@ -44,35 +57,44 @@ namespace Monopoly
         public void TakeTurn(IPlayer player)
         {
             BeginPlayerTurn(player);
-            AdvancePlayer(player);
-            EndPlayerTurn(player);
+            if (!player.IsInJail)
+            {
+                AdvancePlayer(player);
+                EndPlayerTurn(player);
+            }
+            
             Players.AdvanceDeque();
         }
 
         public void BeginPlayerTurn(IPlayer player)
         {
-            if (player.Money < 100)
+            player.RollBothDice();
+            if (player.IsInJail)
             {
-                var properties = GameBoard.GetAllPropertiesOwnedByPlayer(player);
-                foreach (var property in properties)
+                TryGettingOutOfJail(player);
+            }
+            else
+            {
+                if (player.ConsecutiveDoublesRolled == _consecutiveDoublesRolledToGoToJail)
                 {
-                    if (!property.Mortgaged)
-                    {
-                        MortgageProperty(property, player);
-                        return;
-                    }
+                    SendPlayerToJail(player, GameBoard.GetPropertyFromIndex(player.Position));
                 }
+            }
+
+            if (!player.IsInJail)
+            {
+                TryMortgagingProperties(player);
             }
         }
 
         public void EndPlayerTurn(IPlayer player)
         {
-            if (player.Money > 200)
+            if (player.Money > _minMoneyPlayerMustHaveToUnmortgageProperties)
             {
                 var properties = GameBoard.GetAllPropertiesOwnedByPlayer(player);
                 foreach (var property in properties)
                 {
-                    if (property.Mortgaged && player.Money > 200)
+                    if (property.Mortgaged && player.Money > _minMoneyPlayerMustHaveToUnmortgageProperties)
                     {
                         UnMortgageProperty(property, player);
                     }
@@ -82,14 +104,13 @@ namespace Monopoly
 
         public void AdvancePlayer(IPlayer player)
         {
-            int diceRoll = player.RollBothDice();
-            player.Position += diceRoll;
+            player.Position += player.LastDiceRoll;
             IProperty playerPosition = GameBoard.GetPropertyFromIndex(player.Position);
 
             // Player passed Go
-            if (player.Position < diceRoll)
+            if (player.Position < player.LastDiceRoll)
             {
-                player.Money += 200;
+                player.Money += _moneyPaidForPassingGo;
                 Console.WriteLine("{0} passed Go, net worth is now ${1}", player.Name, player.Money);
             }
 
@@ -118,17 +139,18 @@ namespace Monopoly
         {
             Console.WriteLine("Sending player '{0}' to Jail!", player.Name);
             player.Position = GameBoard.GetPropertyPositionFromName("Jail");
+            player.IsInJail = true;
         }
 
         private void CollectIncomeTax(IPlayer player, IProperty currentProperty)
         {
-            player.Money -= Math.Min((int)(player.Money * 0.20), 200);
+            player.Money -= Math.Min((int)(player.Money * _percentagePaidForIncomeTax), _maxIncomeTaxPaid);
             Console.WriteLine("Income Tax Collected, '{0}' net worth is now ${1}", player.Name, player.Money);
         }
 
         private void CollectLuxuryTax(IPlayer player, IProperty currentProperty)
         {
-            player.Money -= 75;
+            player.Money -= _luxuryTaxPaid;
             Console.WriteLine("Luxary tax Collected, {0} net worth is now ${1}", player.Name, player.Money);
         }
 
@@ -162,7 +184,7 @@ namespace Monopoly
         private void BuyProperty(IPlayer player, IProperty currentProperty)
         {
             // This is not a requirement, but a good life decision
-            if (player.Money - currentProperty.Price > 100)
+            if (player.Money - currentProperty.Price > _minMoneyPlayerMustHaveToBuyProperty)
             {
                 player.Money -= currentProperty.Price;
                 GameBoard.PlayerPurchasedProperty(player, currentProperty);
@@ -213,12 +235,47 @@ namespace Monopoly
             PayRentAmmount(playerOwedMoney, player, rentAmmount);
         }
 
+        private void TryMortgagingProperties(IPlayer player)
+        {
+            if (player.Money < _maxMoneyPlayerMustHaveToMortgageProperties)
+            {
+                var properties = GameBoard.GetAllPropertiesOwnedByPlayer(player);
+                foreach (var property in properties)
+                {
+                    if (!property.Mortgaged)
+                    {
+                        MortgageProperty(property, player);
+                        return;
+                    }
+                }
+            }
+        }
+
+        private void TryGettingOutOfJail(IPlayer player)
+        {
+            if (player.ConsecutiveDoublesRolled > 0)
+            {
+                player.ReleaseFromJail();
+                Console.WriteLine("Player '{0}' released from jail!", player.Name);
+            }
+            else if (player.ConsecutiveTurnsInJail == _maxRoundsPlayerMayStayInJail || player.Money >= 1000)
+            {
+                player.Money -= _moneyPaidToGetOutOfJail;
+                player.ReleaseFromJail();
+                Console.WriteLine("Player '{0}' bought out of jail!", player.Name);
+            }
+            else
+            {
+                player.ConsecutiveTurnsInJail++;
+            }
+        }
+
         private void MortgageProperty(IProperty property, IPlayer player)
         {
             if (!property.Mortgaged)
             {
                 property.Mortgaged = true;
-                player.Money += (int)(property.Price * 0.75);
+                player.Money += (int)(property.Price * _percentagePaidForMortgagingProperty);
                 Console.WriteLine(
                     "{0} mortgaged {1}, net worth is now ${2}",
                     player.Name,
@@ -232,7 +289,7 @@ namespace Monopoly
             if (property.Mortgaged && player.Money > property.Price)
             {
                 property.Mortgaged = false;
-                player.Money -= property.Price;
+                player.Money -= (int)(property.Price * _percentagePaidForUnmortgagingProperty);
                 Console.WriteLine(
                     "{0} unmortgaged {1}, net worth is now ${2}",
                     player.Name,

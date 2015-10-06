@@ -1,4 +1,6 @@
-﻿namespace Monopoly
+﻿using System;
+
+namespace Monopoly
 {
     public class Player : IPlayer
     {
@@ -18,6 +20,10 @@
 
         public int LastDiceRoll { get; set; } = 0;
 
+        public int ConsecutiveDoublesRolled { get; set; }
+        public int ConsecutiveTurnsInJail { get; set; }
+        public bool IsInJail { get; set; }
+
         public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
             Generator = generator;
@@ -33,8 +39,24 @@
 
         public int RollBothDice()
         {
-            LastDiceRoll = RollDie() + RollDie();
+            int dieRoll1 = RollDie();
+            int dieRoll2 = RollDie();
+            LastDiceRoll = dieRoll1 + dieRoll2;
+            if (dieRoll1 == dieRoll2)
+            {
+                ConsecutiveDoublesRolled++;
+            }
+            else
+            {
+                ConsecutiveDoublesRolled = 0;
+            }
             return LastDiceRoll;
+        }
+
+        public void ReleaseFromJail()
+        {
+            IsInJail = false;
+            ConsecutiveTurnsInJail = 0;
         }
     }
 }

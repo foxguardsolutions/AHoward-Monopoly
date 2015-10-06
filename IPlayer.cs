@@ -8,8 +8,12 @@
         IBoard GameBoard { get; }
         IRandomGenerator Generator { get; }
         int LastDiceRoll { get; set; }
+        int ConsecutiveDoublesRolled { get; set; }
+        int ConsecutiveTurnsInJail { get; set; }
+        bool IsInJail { get; set; }
 
         int RollDie();
         int RollBothDice();
+        void ReleaseFromJail();
     }
 }

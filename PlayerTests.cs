@@ -42,5 +42,17 @@ namespace Monopoly
         {
             return player.RollBothDice();
         }
+
+        [Test]
+        public void RollBothDiceIncreasesConsecutiveDoublesRolled()
+        {
+            Assert.AreEqual(0, player.ConsecutiveDoublesRolled);
+            player.RollBothDice();
+            Assert.AreEqual(1, player.ConsecutiveDoublesRolled);
+            player.RollBothDice();
+            Assert.AreEqual(2, player.ConsecutiveDoublesRolled);
+            player.RollBothDice();
+            Assert.AreEqual(3, player.ConsecutiveDoublesRolled);
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace Monopoly
         {
             Player player = new Player(generator, gameBoard, "a");
             Assert.AreEqual(0, player.Position);
+            player.RollBothDice();
             game.AdvancePlayer(player);
             Assert.AreEqual(4, player.Position);
         }
@@ -41,6 +42,7 @@ namespace Monopoly
         {
             Player player = new Player(generator, gameBoard, "a");
             player.Position = 26;
+            player.RollBothDice();
             game.AdvancePlayer(player);
             Assert.AreEqual(10, player.Position);
         }
@@ -52,6 +54,7 @@ namespace Monopoly
             Player player = new Player(generator, gameBoard, "A");
             player.Position = start;
             Assert.AreEqual(0, player.Money);
+            player.RollBothDice();
             game.AdvancePlayer(player);
             Assert.AreEqual(200, player.Money);
         }
@@ -63,6 +66,7 @@ namespace Monopoly
             var player = playerDeque.CurrentPlayer;
             player.Money = fundsAvailable;
             player.Position = 2;
+            player.RollBothDice();
             game.AdvancePlayer(player);
 
             var property = gameBoard.GetPropertyFromIndex(player.Position);
@@ -107,6 +111,10 @@ namespace Monopoly
             game.TakeTurn(playerb);
             Assert.AreEqual(500 - 25, playerb.Money);
 
+            // Reset consecutive doubles so they don't go to jail
+            playera.ConsecutiveDoublesRolled = 0;
+            playerb.ConsecutiveDoublesRolled = 0;
+
             playera.Position = 11;
             game.TakeTurn(playera);
             playerb.Position = 11;
@@ -120,6 +128,10 @@ namespace Monopoly
             playerb.Money = 500;
             game.TakeTurn(playerb);
             Assert.AreEqual(500 - 100, playerb.Money);
+
+            // Reset consecutive doubles so they don't go to jail
+            playera.ConsecutiveDoublesRolled = 0;
+            playerb.ConsecutiveDoublesRolled = 0;
 
             playera.Position = 31;
             game.TakeTurn(playera);
@@ -166,6 +178,81 @@ namespace Monopoly
             Assert.IsTrue(boardwalk.Mortgaged);
             Assert.IsFalse(railroad.Mortgaged);
             Assert.AreEqual(50, player.Money);
+        }
+
+        [TestCase(1, Result = false)]
+        [TestCase(1, Result = false)]
+        [TestCase(3, Result = true)]
+        public bool RollingDoublesThreeConsecutiveTimesLandsPlayerInJail(int numberOfTurns)
+        {
+            var player = playerDeque.CurrentPlayer;
+            for (int i = 0; i < numberOfTurns; i++)
+            {
+                game.TakeTurn(player);
+            }
+
+            return player.IsInJail && player.ConsecutiveDoublesRolled == numberOfTurns;
+        }
+
+        [Test]
+        public void RollingDoublesWhileInJailReleasesPlayerFromJail()
+        {
+            var player = playerDeque.CurrentPlayer;
+            player.IsInJail = true;
+            game.TakeTurn(player);
+            Assert.IsFalse(player.IsInJail);
+        }
+
+        [Test]
+        public void RollingDoublesWhileInJailAdvancesPlayerOnBoardAfterRelease()
+        {
+            var player = playerDeque.CurrentPlayer;
+            player.IsInJail = true;
+            player.Position = 10;
+            game.TakeTurn(player);
+            Assert.IsFalse(player.IsInJail);
+            Assert.AreEqual(14, player.Position);
+        }
+
+        private void NonDoubleSetup()
+        {
+            generator = new AlternateRandomGeneratorMoc();
+            string data = File.ReadAllText("json\\propertyGroups.json");
+            gameBoard = new Board(data);
+            string[] players =
+            {
+                "a", "b", "c", "d", "e"
+            };
+
+            playerDeque = new PlayerDeque(generator, new PlayerFactory(players, generator, gameBoard));
+            game = new Game(gameBoard);
+            game.Players = playerDeque;
+        }
+
+        [TestCase(100, Result = true)]
+        [TestCase(1100, Result = false)]
+        public bool PlayerBuysOutOfJailWhenHeHasEnoughMoney(int playerMoney)
+        {
+            NonDoubleSetup();
+            var player = playerDeque.CurrentPlayer;
+            player.IsInJail = true;
+            player.Money = playerMoney;
+            game.BeginPlayerTurn(player);
+            return player.IsInJail;
+        }
+
+        [TestCase(0, Result = true)]
+        [TestCase(1, Result = true)]
+        [TestCase(2, Result = true)]
+        [TestCase(3, Result = false)]
+        public bool PlayerIsForcedToBuyOutOfJailOnThirdTurn(int consecutiveJailTurns)
+        {
+            NonDoubleSetup();
+            var player = playerDeque.CurrentPlayer;
+            player.IsInJail = true;
+            player.ConsecutiveTurnsInJail = consecutiveJailTurns;
+            game.BeginPlayerTurn(player);
+            return player.IsInJail;
         }
     }
 }
