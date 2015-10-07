@@ -6,6 +6,6 @@
         public string Action { get; set; }
         public string AssociatedProperty { get; set; }
         public int Ammount { get; set; }
-        public int Modifier { get; set; }
+        public int Modifier { get; set; } = 1;
     }
 }

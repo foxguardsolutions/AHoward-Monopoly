@@ -183,13 +183,13 @@ namespace Monopoly
 
         private void CollectIncomeTax(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            player.Money -= Math.Min((int)(player.Money * _percentagePaidForIncomeTax), _maxIncomeTaxPaid);
+            player.Money -= Math.Min((int)(player.Money * _percentagePaidForIncomeTax), _maxIncomeTaxPaid) * rentModifier;
             Console.WriteLine("Income Tax Collected, '{0}' net worth is now ${1}", player.Name, player.Money);
         }
 
         private void CollectLuxuryTax(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            player.Money -= _luxuryTaxPaid;
+            player.Money -= _luxuryTaxPaid * rentModifier;
             Console.WriteLine("Luxary tax Collected, {0} net worth is now ${1}", player.Name, player.Money);
         }
 
@@ -371,7 +371,7 @@ namespace Monopoly
             CheckPlayerPassedGo(player, lastPosition);
 
             var property = GameBoard.GetPropertyFromIndex(player.Position);
-            PerformActions(player, property);
+            PerformActions(player, property, card.Modifier);
         }
 
         private IProperty FindClosestPropertyInGroupToPlayer(IPropertyGroup group, IPlayer player)
@@ -396,21 +396,14 @@ namespace Monopoly
 
             CheckPlayerPassedGo(player, lastPosition);
 
-            if (propertyGroup.Properties.Select(x => x.Name).Contains("Electric Company"))
-            {
-                PerformActions(player, property, 10);
-            }
-            else
-            {
-                PerformActions(player, property, 2);
-            }
+            PerformActions(player, property, card.Modifier);
         }
 
         private void MovePlayerBackSpaces(IPlayer player, Card card)
         {
             player.Position = (GameBoard.PropertyCount + player.Position - card.Ammount) % GameBoard.PropertyCount;
             var property = GameBoard.GetPropertyFromIndex(player.Position);
-            PerformActions(player, property);
+            PerformActions(player, property, card.Modifier);
         }
 
         private void BankPaysPlayer(IPlayer player, Card card)
