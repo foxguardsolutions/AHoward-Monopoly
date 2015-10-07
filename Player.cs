@@ -1,11 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 namespace Monopoly
 {
     public class Player : IPlayer
     {
         private int _position;
-        private int _minDieRoll = 1, _maxDieRoll = 6;
+        private const int _minDieRoll = 1, _maxDieRoll = 6;
         public string Name { get; }
 
         public IBoard GameBoard { get; }
@@ -23,6 +23,7 @@ namespace Monopoly
         public int ConsecutiveDoublesRolled { get; set; }
         public int ConsecutiveTurnsInJail { get; set; }
         public bool IsInJail { get; set; }
+        public List<Card> GetOutOfJailFreeCards { get; set; } = new List<Card>();
 
         public Player(IRandomGenerator generator, IBoard gameBoard, string name = "")
         {
@@ -57,6 +58,19 @@ namespace Monopoly
         {
             IsInJail = false;
             ConsecutiveTurnsInJail = 0;
+        }
+
+        public Card UseGetOutOfJailFreeCard()
+        {
+            if (IsInJail && GetOutOfJailFreeCards.Count > 0)
+            {
+                var card = GetOutOfJailFreeCards[0];
+                GetOutOfJailFreeCards.Remove(card);
+                ReleaseFromJail();
+                return card;
+            }
+
+            return null;
         }
     }
 }

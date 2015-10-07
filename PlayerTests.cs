@@ -54,5 +54,15 @@ namespace Monopoly
             player.RollBothDice();
             Assert.AreEqual(3, player.ConsecutiveDoublesRolled);
         }
+
+        [Test]
+        public void UseGetOutOfJailFreeCardReleasesPlayerFromJailAndDecreasesCardCount()
+        {
+            player.GetOutOfJailFreeCards.Add(new Card());
+            player.IsInJail = true;
+            player.UseGetOutOfJailFreeCard();
+            Assert.AreEqual(0, player.GetOutOfJailFreeCards.Count);
+            Assert.IsFalse(player.IsInJail);
+        }
     }
 }

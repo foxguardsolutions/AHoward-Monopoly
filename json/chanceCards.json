@@ -1,0 +1,76 @@
+[
+    {
+        "Name": "Advance to Go",
+        "Action": "Move To Property",
+        "AssociatedProperty": "Go"
+    },
+    {
+        "Name": "Advance to Illinois Ave",
+        "Action": "Move To Property",
+        "AssociatedProperty": "Illinois Avenue"
+    },
+    {
+        "Name": "Advance to St. Charles Place",
+        "Action": "Move To Property",
+        "AssociatedProperty": "St. Charles Place"
+    },
+    {
+        "Name": "Advance to Nearest Utility",
+        "Action": "Move To Nearest Property",
+        "AssociatedProperty": "Electric Company",
+        "Modifier": 10
+    },
+    {
+        "Name": "Advance to Nearest RailRoad",
+        "Action": "Move To Nearest Property",
+        "AssociatedProperty": "Reading RailRoad",
+        "Modifier": 2
+    },
+    {
+        "Name": "Bank pays you $50",
+        "Action": "Bank pays player",
+        "Ammount": 50
+    },
+    {
+        "Name": "Get out of Jail Free",
+        "Action": "Player gets Get out of Jail Free card"
+    },
+    {
+        "Name": "Go Back 3 Spaces",
+        "Action": "Move Player Back Spaces",
+        "Ammount": 3
+    },
+    {
+        "Name": "Go To Jail",
+        "Action": "Send Player To Jail"
+    },
+    {
+        "Name": "Make General Repairs on Your Property",
+        "Action": "Not Implemented"
+    },
+    {
+        "Name": "Pay Poor Tax",
+        "Action": "Player pays bank",
+        "Ammount": 15
+    },
+    {
+        "Name": "Take a walk on the boardwalk",
+        "Action": "Move To Property",
+        "AssociatedProperty": "Boardwalk"
+    },
+    {
+        "Name": "Elected chairman of the board",
+        "Action": "Pay other players",
+        "Ammount": 50
+    },
+    {
+        "Name": "Your building and loan matures",
+        "Action": "Bank pays player",
+        "Ammount": 150
+    },
+    {
+        "Name": "You won a crossword Competition",
+        "Action": "Bank pays player",
+        "Ammount": 100
+    }
+]

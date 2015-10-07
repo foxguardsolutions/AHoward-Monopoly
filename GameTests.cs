@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.Remoting.Messaging;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -10,20 +12,27 @@ namespace Monopoly
         private IRandomGenerator generator;
         private PlayerDeque playerDeque;
         private Game game;
+        private CardDeck communityChest, chance;
 
         [SetUp]
         public void Setup()
         {
             generator = new RandomGeneratorMoc();
-            string data = File.ReadAllText("json\\propertyGroups.json");
-            gameBoard = new Board(data);
+            string propertyData = File.ReadAllText("json\\propertyGroups.json");
+            gameBoard = new Board(propertyData);
             string[] players =
             {
                 "a", "b", "c", "d", "e"
             };
 
             playerDeque = new PlayerDeque(generator, new PlayerFactory(players, generator, gameBoard));
-            game = new Game(gameBoard);
+
+            string communityChestData = File.ReadAllText("json\\communityChestCards.json");
+            string chanceData = File.ReadAllText("json\\chanceCards.json");
+            communityChest = new CardDeck(communityChestData, generator);
+            chance = new CardDeck(chanceData, generator);
+
+            game = new Game(gameBoard, communityChest, chance);
             game.Players = playerDeque;
         }
 
@@ -47,16 +56,17 @@ namespace Monopoly
             Assert.AreEqual(10, player.Position);
         }
 
-        [TestCase(38)]
-        [TestCase(36)]
-        public void AdvancePlayerGivesPlayer200DollarsForPassingOrLandingOnGo(int start)
+        // In this case the player buys the property he lands on
+        [TestCase(39, Result = 140)]
+        [TestCase(36, Result = 200)]
+        public int AdvancePlayerGivesPlayer200DollarsForPassingOrLandingOnGo(int start)
         {
             Player player = new Player(generator, gameBoard, "A");
             player.Position = start;
             Assert.AreEqual(0, player.Money);
             player.RollBothDice();
             game.AdvancePlayer(player);
-            Assert.AreEqual(200, player.Money);
+            return player.Money;
         }
 
         [TestCase(300, Result = true)]
@@ -181,7 +191,7 @@ namespace Monopoly
         }
 
         [TestCase(1, Result = false)]
-        [TestCase(1, Result = false)]
+        [TestCase(2, Result = false)]
         [TestCase(3, Result = true)]
         public bool RollingDoublesThreeConsecutiveTimesLandsPlayerInJail(int numberOfTurns)
         {
@@ -191,7 +201,7 @@ namespace Monopoly
                 game.TakeTurn(player);
             }
 
-            return player.IsInJail && player.ConsecutiveDoublesRolled == numberOfTurns;
+            return player.IsInJail;
         }
 
         [Test]
@@ -225,7 +235,7 @@ namespace Monopoly
             };
 
             playerDeque = new PlayerDeque(generator, new PlayerFactory(players, generator, gameBoard));
-            game = new Game(gameBoard);
+            game = new Game(gameBoard, communityChest, chance);
             game.Players = playerDeque;
         }
 
@@ -253,6 +263,214 @@ namespace Monopoly
             player.ConsecutiveTurnsInJail = consecutiveJailTurns;
             game.BeginPlayerTurn(player);
             return player.IsInJail;
+        }
+
+        private void AdvanceDeckToCard(CardDeck deck, string cardName)
+        {
+            while (deck.TopCard.Name != cardName)
+            {
+                deck.AdvanceDeck();
+            }
+        }
+
+        [Test]
+        public void DrawingChanceCardGoToJailSendsPlayerToJail()
+        {
+            AdvanceDeckToCard(chance, "Go To Jail");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            Assert.IsFalse(player.IsInJail);
+            game.TakeTurn(player);
+            Assert.IsTrue(player.IsInJail);
+
+            var jailIndex = gameBoard.GetPropertyPositionFromName("Jail");
+            Assert.AreEqual(jailIndex, player.Position);
+        }
+
+        [Test]
+        public void DrawingCommunityChestCardGoToJailSendsPlayerToJail()
+        {
+            AdvanceDeckToCard(communityChest, "Go To Jail");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 38;
+            Assert.IsFalse(player.IsInJail);
+            game.TakeTurn(player);
+            Assert.IsTrue(player.IsInJail);
+
+            var jailIndex = gameBoard.GetPropertyPositionFromName("Jail");
+            Assert.AreEqual(jailIndex, player.Position);
+        }
+
+        [TestCase("Advance to Go", Result = 0)]
+        [TestCase("Advance to Illinois Ave", Result = 24)]
+        [TestCase("Advance to St. Charles Place", Result = 11)]
+        [TestCase("Take a walk on the boardwalk", Result = 39)]
+        public int DrawingChanceCardAdvanceToPropertySendsPlayerToProperty(string cardName)
+        {
+            AdvanceDeckToCard(chance, cardName);
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            game.TakeTurn(player);
+            return player.Position;
+        }
+
+        [Test]
+        public void DrawingCommunityChestCardAdvanceToGoSendsPlayerToGoAndAwards200Dollars()
+        {
+            AdvanceDeckToCard(communityChest, "Advance to Go");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 29;
+            player.Money = 0;
+            game.TakeTurn(player);
+            Assert.AreEqual(0, player.Position);
+            Assert.AreEqual(200, player.Money);
+        }
+
+        [TestCase("Advance to Nearest Utility", 3, Result = 12)]
+        [TestCase("Advance to Nearest Utility", 18, Result = 28)]
+        [TestCase("Advance to Nearest RailRoad", 3, Result = 15)]
+        [TestCase("Advance to Nearest RailRoad", 18, Result = 25)]
+        [TestCase("Advance to Nearest RailRoad", 32, Result = 5)]
+        public int DrawingChanceCardMoveToNearestPropertyTypeMovesPlayerToTheNearestOfThatGroup(string cardName, int startPosition)
+        {
+            AdvanceDeckToCard(chance, cardName);
+            var player = playerDeque.CurrentPlayer;
+            player.Position = startPosition;
+            game.TakeTurn(player);
+            return player.Position;
+        }
+
+        [Test]
+        public void
+            WhenUtilityIsOwnedAndPlayerDrawsAdvanceToNearestUtilityChanceCardPlayerPaysTenTimesAmmountShownOnDice()
+        {
+            AdvanceDeckToCard(chance, "Advance to Nearest Utility");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 8;
+            player.Money = 350;
+            game.TakeTurn(player);
+            Assert.AreEqual(200, player.Money);
+
+            player = playerDeque.CurrentPlayer;
+            player.Money = 40;
+            player.Position = 3;
+            game.TakeTurn(player);
+
+            Assert.AreEqual(0, player.Money);
+        }
+
+        [Test]
+        public void
+            WhenRailRoadIsOwnedAndPlayerDrawsAdvanceToNearestRailRoadChanceCardPlayerPaysTwiceAmmountOfRent()
+        {
+            AdvanceDeckToCard(chance, "Advance to Nearest RailRoad");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 11;
+            player.Money = 350;
+            game.TakeTurn(player);
+            Assert.AreEqual(150, player.Money);
+
+            player = playerDeque.CurrentPlayer;
+            player.Money = 50;
+            player.Position = 3;
+            game.TakeTurn(player);
+
+            Assert.AreEqual(0, player.Money);
+        }
+
+        [TestCase("Bank pays you $50", Result = 50)]
+        [TestCase("Your building and loan matures", Result = 150)]
+        [TestCase("You won a crossword Competition", Result = 100)]
+        [TestCase("Pay Poor Tax", Result = -15)]
+        public int BankPaysOrTakesAmmountShownOnCardWhenDrawingMoneyAlteringChanceCard(string cardName)
+        {
+            AdvanceDeckToCard(chance, cardName);
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            game.TakeTurn(player);
+            return player.Money;
+        }
+
+        [Test]
+        public void MovePlayerBackSpacesMovesPlayerBackNumberOfSpacesIndicatedOnCard()
+        {
+            AdvanceDeckToCard(chance, "Go Back 3 Spaces");
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            game.TakeTurn(player);
+            Assert.AreEqual(4, player.Position);
+        }
+
+        [TestCase("Elected chairman of the board", 50)]
+        public void PlayerPaysAllOtherPlayersAmmountShownOnCardForSomeCards(string cardName, int ammountPaid)
+        {
+            AdvanceDeckToCard(chance, cardName);
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            game.TakeTurn(player);
+
+            foreach (var otherplayer in playerDeque)
+            {
+                if (otherplayer != player)
+                {
+                    Assert.AreEqual(ammountPaid, otherplayer.Money);
+                }
+            }
+
+            Assert.AreEqual(ammountPaid * (playerDeque.Count - 1) * -1, player.Money);
+        }
+
+        [TestCase("Grand Opera Night", 50)]
+        [TestCase("It's your birthday!", 10)]
+        public void PlayerCollectsFromAllOtherPlayersAmmountShownOnCardForSomeCards(string cardName, int ammountCollected)
+        {
+            AdvanceDeckToCard(communityChest, cardName);
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 29;
+            game.TakeTurn(player);
+
+            foreach (var otherplayer in playerDeque)
+            {
+                if (otherplayer != player)
+                {
+                    Assert.AreEqual(-1 * ammountCollected, otherplayer.Money);
+                }
+            }
+
+            Assert.AreEqual(ammountCollected * (playerDeque.Count - 1), player.Money);
+        }
+
+        [Test]
+        public void GettingAGetOutOfJailFreeCardRemovesItFromTheDeck()
+        {
+            AdvanceDeckToCard(chance, "Get out of Jail Free");
+            var card = chance.TopCard;
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 3;
+            game.TakeTurn(player);
+
+            Assert.AreEqual(card, player.GetOutOfJailFreeCards[0]);
+            Assert.IsFalse(chance.Contains(card));
+        }
+
+        [Test]
+        public void UsingAGetOutOfJailFreeCardAddsItBackToTheDeck()
+        {
+            NonDoubleSetup();
+            AdvanceDeckToCard(chance, "Get out of Jail Free");
+            var card = chance.TopCard;
+            var player = playerDeque.CurrentPlayer;
+            player.Position = 0;
+            game.TakeTurn(player);
+
+            player.Position = 23;
+            game.TakeTurn(player);
+            Assert.IsTrue(player.IsInJail);
+            game.TakeTurn(player);
+
+            Assert.IsFalse(player.IsInJail);
+            Assert.AreEqual(0, player.GetOutOfJailFreeCards.Count);
+            Assert.IsTrue(chance.Contains(card));
         }
     }
 }

@@ -58,6 +58,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="json\chanceCards.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="json\communityChestCards.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="json\propertyGroups.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -75,12 +81,17 @@
     <Compile Include="AlternateRandomGeneratorMoc.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
+    <Compile Include="Card.cs" />
+    <Compile Include="CardDeck.cs" />
+    <Compile Include="CardDeckTests.cs" />
+    <Compile Include="DeckFactory.cs" />
+    <Compile Include="DeckFactoryTests.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTests.cs" />
     <Compile Include="IBoard.cs" />
     <Compile Include="IGame.cs" />
     <Compile Include="IPlayer.cs" />
-    <Compile Include="IPlayerDeque.cs" />
+    <Compile Include="IQueue.cs" />
     <Compile Include="IPlayerFactory.cs" />
     <Compile Include="IProperty.cs" />
     <Compile Include="IPropertyGroup.cs" />

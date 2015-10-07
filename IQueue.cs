@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace Monopoly
+﻿namespace Monopoly
 {
-    public interface IPlayerDeque
+    public interface IQueue
     {
         int Count { get; }
         IPlayer CurrentPlayer { get; }

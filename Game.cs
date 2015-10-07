@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Monopoly
 {
     public class Game : IGame
     {
-        private Dictionary<string, Action<IPlayer, IProperty>> actionProperties;
+        private CardDeck _communityChest, _chance;
+        private readonly Dictionary<string, Action<IPlayer, IProperty, int>> actionProperties;
+        private readonly Dictionary<string, Action<IPlayer, Card>> actionCards; 
         private const int _moneyPaidForPassingGo = 200;
         private const int _moneyPaidToGetOutOfJail = 50;
         private const int _consecutiveDoublesRolledToGoToJail = 3;
@@ -20,20 +23,46 @@ namespace Monopoly
         private const int _maxIncomeTaxPaid = 200;
         private const int _luxuryTaxPaid = 75;
         public IBoard GameBoard { get; }
-        public IPlayerDeque Players { get; set; } = null;
+        public IQueue Players { get; set; } = null;
 
-        public Game(IBoard gameBoard)
+        public CardDeck CommunityChest { set { _communityChest = value; } }
+        public CardDeck Chance { set { _chance = value; } }
+
+        public Game(IBoard gameBoard, CardDeck communityChest, CardDeck chance)
         {
             GameBoard = gameBoard;
-            actionProperties = new Dictionary<string, Action<IPlayer, IProperty>>()
+            actionProperties = new Dictionary<string, Action<IPlayer, IProperty, int>>()
             {
                 { "Send Player To Jail", SendPlayerToJail },
                 { "Pay Income Tax", CollectIncomeTax },
                 { "Pay Luxury Tax", CollectLuxuryTax },
                 { "Regular Property Action", PerformRegularPropertyAction },
                 { "Utility Action", PerformUtilityAction },
-                { "RailRoad Action", PerformRailRoadAction }
+                { "RailRoad Action", PerformRailRoadAction },
+                { "Collect Chance", DrawChance },
+                { "Collect Community Chest", DrawCommunityChest }
             };
+
+            actionCards = new Dictionary<string, Action<IPlayer, Card>>()
+            {
+                { "Move To Property", MovePlayerToPropertyIndicatedByCard },
+                { "Move To Nearest Property", MovePlayerToClosestProperty },
+                { "Bank pays player", BankPaysPlayer },
+                { "Player pays bank", PlayerPaysBank },
+                { "Send Player To Jail", SendPlayerToJail },
+                { "Pay other players", PlayerPaysAllOtherPlayers },
+                { "Collect from other players", OtherPlayersPayPlayer },
+                { "Move Player Back Spaces", MovePlayerBackSpaces },
+                { "Player gets Get out of Jail Free card", AwardGetOutOfJailFreeCard }
+            };
+
+            _communityChest = communityChest;
+            _chance = chance;
+        }
+
+        // Just to make Ninject happy
+        public Game(IBoard gameBoard) : this(gameBoard, null, null)
+        {
         }
 
         public void Play()
@@ -104,26 +133,30 @@ namespace Monopoly
 
         public void AdvancePlayer(IPlayer player)
         {
+            int lastPosition = player.Position;
             player.Position += player.LastDiceRoll;
-            IProperty playerPosition = GameBoard.GetPropertyFromIndex(player.Position);
+            CheckPlayerPassedGo(player, lastPosition);
 
-            // Player passed Go
-            if (player.Position < player.LastDiceRoll)
+            IProperty playerPosition = GameBoard.GetPropertyFromIndex(player.Position);
+            PerformActions(player, playerPosition);
+        }
+
+        private void CheckPlayerPassedGo(IPlayer player, int lastPosition)
+        {
+            if (lastPosition > player.Position)
             {
                 player.Money += _moneyPaidForPassingGo;
                 Console.WriteLine("{0} passed Go, net worth is now ${1}", player.Name, player.Money);
             }
-
-            PerformActions(player, playerPosition);
         }
 
-        private void PerformActions(IPlayer player, IProperty currentProperty)
+        private void PerformActions(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             PrintPlayerPosition(player, currentProperty);
             var action = currentProperty.Action ?? string.Empty;
             if (actionProperties.ContainsKey(action))
             {
-                actionProperties[action](player, currentProperty);
+                actionProperties[action](player, currentProperty, rentModifier);
             }
         }
 
@@ -135,41 +168,47 @@ namespace Monopoly
                 currentProperty.Name);
         }
 
-        private void SendPlayerToJail(IPlayer player, IProperty currentProperty)
+        private void SendPlayerToJail(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             Console.WriteLine("Sending player '{0}' to Jail!", player.Name);
             player.Position = GameBoard.GetPropertyPositionFromName("Jail");
             player.IsInJail = true;
         }
 
-        private void CollectIncomeTax(IPlayer player, IProperty currentProperty)
+        private void SendPlayerToJail(IPlayer player, Card card)
+        {
+            var property = GameBoard.GetPropertyFromIndex(player.Position);
+            SendPlayerToJail(player, property);
+        }
+
+        private void CollectIncomeTax(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             player.Money -= Math.Min((int)(player.Money * _percentagePaidForIncomeTax), _maxIncomeTaxPaid);
             Console.WriteLine("Income Tax Collected, '{0}' net worth is now ${1}", player.Name, player.Money);
         }
 
-        private void CollectLuxuryTax(IPlayer player, IProperty currentProperty)
+        private void CollectLuxuryTax(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             player.Money -= _luxuryTaxPaid;
             Console.WriteLine("Luxary tax Collected, {0} net worth is now ${1}", player.Name, player.Money);
         }
 
-        private void PerformRegularPropertyAction(IPlayer player, IProperty currentProperty)
+        private void PerformRegularPropertyAction(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            BuyOrPayRent(player, currentProperty, PayRent);
+            BuyOrPayRent(player, currentProperty, PayRent, rentModifier);
         }
 
-        private void PerformUtilityAction(IPlayer player, IProperty currentProperty)
+        private void PerformUtilityAction(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            BuyOrPayRent(player, currentProperty, PayUtility);
+            BuyOrPayRent(player, currentProperty, PayUtility, rentModifier);
         }
 
-        private void PerformRailRoadAction(IPlayer player, IProperty currentProperty)
+        private void PerformRailRoadAction(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            BuyOrPayRent(player, currentProperty, PayRailRoadToll);
+            BuyOrPayRent(player, currentProperty, PayRailRoadToll, rentModifier);
         }
 
-        private void BuyOrPayRent(IPlayer player, IProperty currentProperty, Action<IPlayer, IProperty> rentFunction)
+        private void BuyOrPayRent(IPlayer player, IProperty currentProperty, Action<IPlayer, IProperty, int> rentFunction, int rentModifier = 1)
         {
             if (!currentProperty.IsOwned())
             {
@@ -177,7 +216,7 @@ namespace Monopoly
             }
             else if (currentProperty.Owner != player)
             {
-                rentFunction(player, currentProperty);
+                rentFunction(player, currentProperty, rentModifier);
             }
         }
 
@@ -207,21 +246,21 @@ namespace Monopoly
                toPlayer.Name);
         }
 
-        private void PayRent(IPlayer player, IProperty currentProperty)
+        private void PayRent(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            PayRentAmmount(currentProperty.Owner, player, GameBoard.CalculateRent(currentProperty));
+            PayRentAmmount(currentProperty.Owner, player, GameBoard.CalculateRent(currentProperty) * rentModifier);
         }
 
-        private void PayUtility(IPlayer player, IProperty currentProperty)
+        private void PayUtility(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             var playerOwedMoney = currentProperty.Owner;
             var group = GameBoard.GetGroupFromProperty(currentProperty);
             int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
-            int modifier = (ownedProperties == 1) ? 4 : 10;
+            int modifier = (rentModifier == 1) ? (ownedProperties == 1) ? 4 : 10 : rentModifier;
             PayRentAmmount(playerOwedMoney, player, modifier * player.LastDiceRoll);
         }
 
-        private void PayRailRoadToll(IPlayer player, IProperty currentProperty)
+        private void PayRailRoadToll(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
             var playerOwedMoney = currentProperty.Owner;
             var group = GameBoard.GetGroupFromProperty(currentProperty);
@@ -232,7 +271,7 @@ namespace Monopoly
                 rentAmmount *= 2;
             }
 
-            PayRentAmmount(playerOwedMoney, player, rentAmmount);
+            PayRentAmmount(playerOwedMoney, player, rentAmmount * rentModifier);
         }
 
         private void TryMortgagingProperties(IPlayer player)
@@ -257,6 +296,10 @@ namespace Monopoly
             {
                 player.ReleaseFromJail();
                 Console.WriteLine("Player '{0}' released from jail!", player.Name);
+            }
+            else if (player.GetOutOfJailFreeCards.Count > 0)
+            {
+                UseGetOutOfJailFreeCard(player);
             }
             else if (player.ConsecutiveTurnsInJail == _maxRoundsPlayerMayStayInJail || player.Money >= 1000)
             {
@@ -295,6 +338,151 @@ namespace Monopoly
                     player.Name,
                     property.Name,
                     player.Money);
+            }
+        }
+
+        private void DrawCommunityChest(IPlayer player, IProperty property, int modifier = 0)
+        {
+            DrawCard(player, _communityChest);
+        }
+
+        private void DrawChance(IPlayer player, IProperty property, int modifier = 0)
+        {
+            DrawCard(player, _chance);
+        }
+
+        private void DrawCard(IPlayer player, CardDeck deck)
+        {
+            var card = deck.TopCard;
+            if (actionCards.ContainsKey(card.Action))
+            {
+                actionCards[card.Action](player, card);
+            }
+
+            deck.AdvanceDeck();
+        }
+
+        private void MovePlayerToPropertyIndicatedByCard(IPlayer player, Card card)
+        {
+            var propertyIndex = GameBoard.GetPropertyPositionFromName(card.AssociatedProperty);
+            var lastPosition = player.Position;
+            player.Position = propertyIndex;
+
+            CheckPlayerPassedGo(player, lastPosition);
+
+            var property = GameBoard.GetPropertyFromIndex(player.Position);
+            PerformActions(player, property);
+        }
+
+        private IProperty FindClosestPropertyInGroupToPlayer(IPropertyGroup group, IPlayer player)
+        {
+            var property = group.Properties[0];
+            foreach (var p in group.Properties)
+            {
+                property = (FindDistanceForward(player, p)) < FindDistanceForward(player, property) ? p : property;
+            }
+
+            return property;
+        }
+
+        private void MovePlayerToClosestProperty(IPlayer player, Card card)
+        {
+            var propertyInGroup = GameBoard.GetPropertyFromName(card.AssociatedProperty);
+            var propertyGroup = GameBoard.GetGroupFromProperty(propertyInGroup);
+            var property = FindClosestPropertyInGroupToPlayer(propertyGroup, player);
+
+            var lastPosition = player.Position;
+            player.Position = property.MapIndex;
+
+            CheckPlayerPassedGo(player, lastPosition);
+
+            if (propertyGroup.Properties.Select(x => x.Name).Contains("Electric Company"))
+            {
+                PerformActions(player, property, 10);
+            }
+            else
+            {
+                PerformActions(player, property, 2);
+            }
+        }
+
+        private void MovePlayerBackSpaces(IPlayer player, Card card)
+        {
+            player.Position = (GameBoard.PropertyCount + player.Position - card.Ammount) % GameBoard.PropertyCount;
+            var property = GameBoard.GetPropertyFromIndex(player.Position);
+            PerformActions(player, property);
+        }
+
+        private void BankPaysPlayer(IPlayer player, Card card)
+        {
+            Console.WriteLine("Player {0} paid ${1} for drawing card: {2}", player.Name, card.Ammount, card.Name);
+            player.Money += card.Ammount;
+        }
+
+        private void PlayerPaysBank(IPlayer player, Card card)
+        {
+            Console.WriteLine("Player {0} pays bank ${1} for drawing card: {2}", player.Name, card.Ammount, card.Name);
+            player.Money -= card.Ammount;
+        }
+
+        private void PlayerPaysAllOtherPlayers(IPlayer player, Card card)
+        {
+            player.Money -= card.Ammount * (Players.Count - 1);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players.AdvanceDeque();
+                var p = Players.CurrentPlayer;
+                if (p != player)
+                {
+                    p.Money += card.Ammount;
+                    Console.WriteLine("{0} paid ${1} to {2}", player.Name, card.Ammount, p.Name);
+                }
+            }
+        }
+
+        private void OtherPlayersPayPlayer(IPlayer player, Card card)
+        {
+            player.Money += card.Ammount * (Players.Count - 1);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players.AdvanceDeque();
+                var p = Players.CurrentPlayer;
+                if (p != player)
+                {
+                    p.Money -= card.Ammount;
+                    Console.WriteLine("{0} paid ${1} to {2}", p.Name, card.Ammount, player.Name);
+                }
+            }
+        }
+
+        private int FindDistanceForward(IPlayer player, IProperty targetProperty)
+        {
+            return (targetProperty.MapIndex - player.Position + GameBoard.PropertyCount) % GameBoard.PropertyCount;
+        }
+
+        private void AwardGetOutOfJailFreeCard(IPlayer player, Card card)
+        {
+            player.GetOutOfJailFreeCards.Add(card);
+            if (_chance.Contains(card))
+            {
+                _chance.RemoveCard(card);
+            }
+            else
+            {
+                _communityChest.RemoveCard(card);
+            }
+        }
+
+        private void UseGetOutOfJailFreeCard(IPlayer player)
+        {
+            var card = player.UseGetOutOfJailFreeCard();
+            if (_chance.ContainsCard(card))
+            {
+                _chance.AddCard(card);
+            }
+            else
+            {
+                _communityChest.AddCard(card);
             }
         }
     }

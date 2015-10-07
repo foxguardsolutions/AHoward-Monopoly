@@ -4,9 +4,9 @@ namespace Monopoly
 {
     public class PlayerFactory : IPlayerFactory
     {
-        private string[] _playerNames;
-        private IRandomGenerator _generator;
-        private IBoard _board;
+        private readonly string[] _playerNames;
+        private readonly IRandomGenerator _generator;
+        private readonly IBoard _board;
 
         public PlayerFactory(string[] names, IRandomGenerator generator, IBoard board)
         {

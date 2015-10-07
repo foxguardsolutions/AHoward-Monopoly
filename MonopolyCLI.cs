@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Ninject;
 
 namespace Monopoly
@@ -14,7 +15,19 @@ namespace Monopoly
             }
 
             StandardKernel kernel = new StandardKernel(new ServiceModule(args));
+
+            CardDeck communityChest = 
+                new CardDeck(
+                    File.ReadAllText("json\\communityChestCards.json"),
+                    kernel.Get<RandomGenerator>());
+            CardDeck chance =
+                new CardDeck(
+                    File.ReadAllText("json\\chanceCards.json"),
+                    kernel.Get<RandomGenerator>());
+
             IGame game = kernel.Get<Game>();
+            game.CommunityChest = communityChest;
+            game.Chance = chance;
             game.Players = kernel.Get<PlayerDeque>();
             game.Play();
 

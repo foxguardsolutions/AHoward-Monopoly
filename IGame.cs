@@ -2,8 +2,10 @@
 {
     public interface IGame
     {
-        IPlayerDeque Players { get; set; }
+        IQueue Players { get; set; }
         IBoard GameBoard { get; }
+        CardDeck CommunityChest { set; }
+        CardDeck Chance { set; }
 
         void Play();
     }

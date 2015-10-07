@@ -6,8 +6,8 @@ namespace Monopoly
 {
     public class Board : IBoard
     {
-        private Dictionary<string, IPropertyGroup> nameToGroupMapping;
-        private Dictionary<int, IPropertyGroup> mapIndexToGroupMapping;
+        private readonly Dictionary<string, IPropertyGroup> nameToGroupMapping;
+        private readonly Dictionary<int, IPropertyGroup> mapIndexToGroupMapping;
 
         public IPropertyGroup[] PropertyGroups { get; set; }
         public int PropertyCount { get; }

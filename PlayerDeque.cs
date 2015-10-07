@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Monopoly
 {
-    public class PlayerDeque : List<IPlayer>, IPlayerDeque
+    public class PlayerDeque : List<IPlayer>, IQueue
     {
         private readonly IRandomGenerator _generator;
 

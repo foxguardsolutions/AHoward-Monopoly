@@ -1,4 +1,6 @@
-﻿namespace Monopoly
+﻿using System.Collections.Generic;
+
+namespace Monopoly
 {
     public interface IPlayer
     {
@@ -11,9 +13,11 @@
         int ConsecutiveDoublesRolled { get; set; }
         int ConsecutiveTurnsInJail { get; set; }
         bool IsInJail { get; set; }
+        List<Card> GetOutOfJailFreeCards { get; set; }
 
         int RollDie();
         int RollBothDice();
         void ReleaseFromJail();
+        Card UseGetOutOfJailFreeCard();
     }
 }
