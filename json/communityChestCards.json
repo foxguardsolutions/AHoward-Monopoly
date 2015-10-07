@@ -7,22 +7,22 @@
     {
         "Name": "Bank error in your favor",
         "Action": "Bank pays player",
-        "Ammount": 200
+        "Amount": 200
     },
     {
         "Name": "Doctors fees",
         "Action": "Player pays bank",
-        "Ammount": 50
+        "Amount": 50
     },
     {
         "Name": "From sale of stock you get $50",
         "Action": "Bank pays player",
-        "Ammount": 50
+        "Amount": 50
     },
     {
         "Name": "Grand Opera Night",
         "Action": "Collect from other players",
-        "Ammount": 50
+        "Amount": 50
     },
     {
         "Name": "Get out of Jail Free",
@@ -31,7 +31,7 @@
     {
         "Name": "Holiday fund matures",
         "Action": "Bank pays player",
-        "Ammount": 100
+        "Amount": 100
     },
     {
         "Name": "Go To Jail",
@@ -40,32 +40,32 @@
     {
         "Name": "Income tax refund",
         "Action": "Bank pays player",
-        "Ammount": 20
+        "Amount": 20
     },
     {
         "Name": "It's your birthday!",
         "Action": "Collect from other players",
-        "Ammount": 10
+        "Amount": 10
     },
     {
         "Name": "Life Insurance Matures",
         "Action": "Bank pays player",
-        "Ammount": 100
+        "Amount": 100
     },
     {
         "Name": "Pay Hospital Fees",
         "Action": "Player pays bank",
-        "Ammount": 100
+        "Amount": 100
     },
     {
         "Name": "Pay School Fees",
         "Action": "Player pays bank",
-        "Ammount": 150
+        "Amount": 150
     },
     {
         "Name": "Receive Consultancy Fee",
         "Action": "Bank pays player",
-        "Ammount": 25
+        "Amount": 25
     },
     {
         "Name": "You are Assessed for Street Repairs",
@@ -74,11 +74,11 @@
     {
         "Name": "Won Second Prize in a Beauty Contest",
         "Action": "Bank pays player",
-        "Ammount": 10
+        "Amount": 10
     },
     {
         "Name": "You inherit $100",
         "Action": "Bank pays player",
-        "Ammount": 100
+        "Amount": 100
     }
 ]

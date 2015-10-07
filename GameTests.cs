@@ -342,7 +342,7 @@ namespace Monopoly
 
         [Test]
         public void
-            WhenUtilityIsOwnedAndPlayerDrawsAdvanceToNearestUtilityChanceCardPlayerPaysTenTimesAmmountShownOnDice()
+            WhenUtilityIsOwnedAndPlayerDrawsAdvanceToNearestUtilityChanceCardPlayerPaysTenTimesAmountShownOnDice()
         {
             AdvanceDeckToCard(chance, "Advance to Nearest Utility");
             var player = playerDeque.CurrentPlayer;
@@ -361,7 +361,7 @@ namespace Monopoly
 
         [Test]
         public void
-            WhenRailRoadIsOwnedAndPlayerDrawsAdvanceToNearestRailRoadChanceCardPlayerPaysTwiceAmmountOfRent()
+            WhenRailRoadIsOwnedAndPlayerDrawsAdvanceToNearestRailRoadChanceCardPlayerPaysTwiceAmountOfRent()
         {
             AdvanceDeckToCard(chance, "Advance to Nearest RailRoad");
             var player = playerDeque.CurrentPlayer;
@@ -382,7 +382,7 @@ namespace Monopoly
         [TestCase("Your building and loan matures", Result = 150)]
         [TestCase("You won a crossword Competition", Result = 100)]
         [TestCase("Pay Poor Tax", Result = -15)]
-        public int BankPaysOrTakesAmmountShownOnCardWhenDrawingMoneyAlteringChanceCard(string cardName)
+        public int BankPaysOrTakesAmountShownOnCardWhenDrawingMoneyAlteringChanceCard(string cardName)
         {
             AdvanceDeckToCard(chance, cardName);
             var player = playerDeque.CurrentPlayer;
@@ -402,7 +402,7 @@ namespace Monopoly
         }
 
         [TestCase("Elected chairman of the board", 50)]
-        public void PlayerPaysAllOtherPlayersAmmountShownOnCardForSomeCards(string cardName, int ammountPaid)
+        public void PlayerPaysAllOtherPlayersAmountShownOnCardForSomeCards(string cardName, int AmountPaid)
         {
             AdvanceDeckToCard(chance, cardName);
             var player = playerDeque.CurrentPlayer;
@@ -413,16 +413,16 @@ namespace Monopoly
             {
                 if (otherplayer != player)
                 {
-                    Assert.AreEqual(ammountPaid, otherplayer.Money);
+                    Assert.AreEqual(AmountPaid, otherplayer.Money);
                 }
             }
 
-            Assert.AreEqual(ammountPaid * (playerDeque.Count - 1) * -1, player.Money);
+            Assert.AreEqual(AmountPaid * (playerDeque.Count - 1) * -1, player.Money);
         }
 
         [TestCase("Grand Opera Night", 50)]
         [TestCase("It's your birthday!", 10)]
-        public void PlayerCollectsFromAllOtherPlayersAmmountShownOnCardForSomeCards(string cardName, int ammountCollected)
+        public void PlayerCollectsFromAllOtherPlayersAmountShownOnCardForSomeCards(string cardName, int AmountCollected)
         {
             AdvanceDeckToCard(communityChest, cardName);
             var player = playerDeque.CurrentPlayer;
@@ -433,11 +433,11 @@ namespace Monopoly
             {
                 if (otherplayer != player)
                 {
-                    Assert.AreEqual(-1 * ammountCollected, otherplayer.Money);
+                    Assert.AreEqual(-1 * AmountCollected, otherplayer.Money);
                 }
             }
 
-            Assert.AreEqual(ammountCollected * (playerDeque.Count - 1), player.Money);
+            Assert.AreEqual(AmountCollected * (playerDeque.Count - 1), player.Money);
         }
 
         [Test]

@@ -29,7 +29,7 @@
     {
         "Name": "Bank pays you $50",
         "Action": "Bank pays player",
-        "Ammount": 50
+        "Amount": 50
     },
     {
         "Name": "Get out of Jail Free",
@@ -38,7 +38,7 @@
     {
         "Name": "Go Back 3 Spaces",
         "Action": "Move Player Back Spaces",
-        "Ammount": 3
+        "Amount": 3
     },
     {
         "Name": "Go To Jail",
@@ -51,7 +51,7 @@
     {
         "Name": "Pay Poor Tax",
         "Action": "Player pays bank",
-        "Ammount": 15
+        "Amount": 15
     },
     {
         "Name": "Take a walk on the boardwalk",
@@ -61,16 +61,16 @@
     {
         "Name": "Elected chairman of the board",
         "Action": "Pay other players",
-        "Ammount": 50
+        "Amount": 50
     },
     {
         "Name": "Your building and loan matures",
         "Action": "Bank pays player",
-        "Ammount": 150
+        "Amount": 150
     },
     {
         "Name": "You won a crossword Competition",
         "Action": "Bank pays player",
-        "Ammount": 100
+        "Amount": 100
     }
 ]

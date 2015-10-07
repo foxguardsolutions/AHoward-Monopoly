@@ -235,20 +235,20 @@ namespace Monopoly
             }
         }
 
-        private void PayRentAmmount(IPlayer toPlayer, IPlayer fromPlayer, int ammount)
+        private void PayRentAmount(IPlayer toPlayer, IPlayer fromPlayer, int Amount)
         {
-            toPlayer.Money += ammount;
-            fromPlayer.Money -= ammount;
+            toPlayer.Money += Amount;
+            fromPlayer.Money -= Amount;
             Console.WriteLine(
                "{0} paid ${1} to {2}",
                fromPlayer.Name,
-               ammount,
+               Amount,
                toPlayer.Name);
         }
 
         private void PayRent(IPlayer player, IProperty currentProperty, int rentModifier = 1)
         {
-            PayRentAmmount(currentProperty.Owner, player, GameBoard.CalculateRent(currentProperty) * rentModifier);
+            PayRentAmount(currentProperty.Owner, player, GameBoard.CalculateRent(currentProperty) * rentModifier);
         }
 
         private void PayUtility(IPlayer player, IProperty currentProperty, int rentModifier = 1)
@@ -257,7 +257,7 @@ namespace Monopoly
             var group = GameBoard.GetGroupFromProperty(currentProperty);
             int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
             int modifier = (rentModifier == 1) ? (ownedProperties == 1) ? 4 : 10 : rentModifier;
-            PayRentAmmount(playerOwedMoney, player, modifier * player.LastDiceRoll);
+            PayRentAmount(playerOwedMoney, player, modifier * player.LastDiceRoll);
         }
 
         private void PayRailRoadToll(IPlayer player, IProperty currentProperty, int rentModifier = 1)
@@ -265,13 +265,13 @@ namespace Monopoly
             var playerOwedMoney = currentProperty.Owner;
             var group = GameBoard.GetGroupFromProperty(currentProperty);
             int ownedProperties = group.GetNumberOfPropertiesInGroupOwnedByPlayer(playerOwedMoney);
-            int rentAmmount = 25;
+            int rentAmount = 25;
             for (var i = 1; i < ownedProperties; i++)
             {
-                rentAmmount *= 2;
+                rentAmount *= 2;
             }
 
-            PayRentAmmount(playerOwedMoney, player, rentAmmount * rentModifier);
+            PayRentAmount(playerOwedMoney, player, rentAmount * rentModifier);
         }
 
         private void TryMortgagingProperties(IPlayer player)
@@ -401,49 +401,49 @@ namespace Monopoly
 
         private void MovePlayerBackSpaces(IPlayer player, Card card)
         {
-            player.Position = (GameBoard.PropertyCount + player.Position - card.Ammount) % GameBoard.PropertyCount;
+            player.Position = (GameBoard.PropertyCount + player.Position - card.Amount) % GameBoard.PropertyCount;
             var property = GameBoard.GetPropertyFromIndex(player.Position);
             PerformActions(player, property, card.Modifier);
         }
 
         private void BankPaysPlayer(IPlayer player, Card card)
         {
-            Console.WriteLine("Player {0} paid ${1} for drawing card: {2}", player.Name, card.Ammount, card.Name);
-            player.Money += card.Ammount;
+            Console.WriteLine("Player {0} paid ${1} for drawing card: {2}", player.Name, card.Amount, card.Name);
+            player.Money += card.Amount;
         }
 
         private void PlayerPaysBank(IPlayer player, Card card)
         {
-            Console.WriteLine("Player {0} pays bank ${1} for drawing card: {2}", player.Name, card.Ammount, card.Name);
-            player.Money -= card.Ammount;
+            Console.WriteLine("Player {0} pays bank ${1} for drawing card: {2}", player.Name, card.Amount, card.Name);
+            player.Money -= card.Amount;
         }
 
         private void PlayerPaysAllOtherPlayers(IPlayer player, Card card)
         {
-            player.Money -= card.Ammount * (Players.Count - 1);
+            player.Money -= card.Amount * (Players.Count - 1);
             for (int i = 0; i < Players.Count; i++)
             {
                 Players.AdvanceDeque();
                 var p = Players.CurrentPlayer;
                 if (p != player)
                 {
-                    p.Money += card.Ammount;
-                    Console.WriteLine("{0} paid ${1} to {2}", player.Name, card.Ammount, p.Name);
+                    p.Money += card.Amount;
+                    Console.WriteLine("{0} paid ${1} to {2}", player.Name, card.Amount, p.Name);
                 }
             }
         }
 
         private void OtherPlayersPayPlayer(IPlayer player, Card card)
         {
-            player.Money += card.Ammount * (Players.Count - 1);
+            player.Money += card.Amount * (Players.Count - 1);
             for (int i = 0; i < Players.Count; i++)
             {
                 Players.AdvanceDeque();
                 var p = Players.CurrentPlayer;
                 if (p != player)
                 {
-                    p.Money -= card.Ammount;
-                    Console.WriteLine("{0} paid ${1} to {2}", p.Name, card.Ammount, player.Name);
+                    p.Money -= card.Amount;
+                    Console.WriteLine("{0} paid ${1} to {2}", p.Name, card.Amount, player.Name);
                 }
             }
         }
