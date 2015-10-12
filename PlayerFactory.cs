@@ -4,20 +4,18 @@ namespace Monopoly
 {
     public class PlayerFactory : IPlayerFactory
     {
-        private string[] _playerNames;
-        private IRandomGenerator _generator;
-        private IBoard _board;
+        private readonly string[] _playerNames;
+        private readonly IRandomGenerator _generator;
 
-        public PlayerFactory(string[] names, IRandomGenerator generator, IBoard board)
+        public PlayerFactory(string[] names, IRandomGenerator generator)
         {
             _playerNames = names;
             _generator = generator;
-            _board = board;
         }
 
         public IPlayer[] GeneratePlayers()
         {
-            return _playerNames.Select(player => new Player(_generator, _board, player)).Cast<IPlayer>().ToArray();
+            return _playerNames.Select(player => new Player(_generator, player)).Cast<IPlayer>().ToArray();
         }
     }
 }

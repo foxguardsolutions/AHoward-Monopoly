@@ -1,53 +1,12 @@
-﻿using Ninject.Modules;
+﻿using System.IO;
+using Ninject.Modules;
 
 namespace Monopoly
 {
     public class ServiceModule : NinjectModule
     {
         private string[] _playerNames;
-        private string[] _propertyNames =
-        {
-            "Go",
-            "Mediterranean Avenue",
-            "Community Chest",
-            "Baltic Avenue",
-            "Income Tax",
-            "Reading RailRoad",
-            "Oriental Avenue",
-            "Chance",
-            "Vermont Avenue",
-            "Connecticut Avenue",
-            "Jail",
-            "St. Charles Place",
-            "Electric Company",
-            "States Avenue",
-            "Virginia Avenue",
-            "Pennsylvania Railroad",
-            "St. James Place",
-            "Community Chest",
-            "Tennessee Avenue",
-            "New York Avenue",
-            "Free Parking",
-            "Kentucky Avenue",
-            "Chance",
-            "Indiana Avenue",
-            "Illinois Avenue",
-            "B. & O. Railroad",
-            "Atlantic Avenue",
-            "Ventnor Avenue",
-            "Water Works",
-            "Marvin Gardens",
-            "Go To Jail",
-            "Pacific Avenue",
-            "North Carolina Avenue",
-            "Community Chest",
-            "Pennsylvania Avenue",
-            "Short Line Railroad",
-            "Chance",
-            "Park Place",
-            "Luxury Tax",
-            "Boardwalk",
-        };
+        private const string propertyFile = "json\\propertyGroups.json";
 
         public ServiceModule(string[] playerNames)
         {
@@ -57,13 +16,18 @@ namespace Monopoly
         public override void Load()
         {
             Bind<IRandomGenerator>().To<RandomGenerator>();
-            Bind<IPropertyFactory>().To<PropertyFactory>()
-                .WithConstructorArgument("names", _propertyNames);
-            Bind<IBoard>().To<Board>();
+            Bind<IProperty>().To<Property>();
+            Bind<IPropertyGroup>().To<PropertyGroup>();
+            Bind<IBoard>().To<Board>().InSingletonScope()
+                .WithConstructorArgument("propertyGroupData", File.ReadAllText(propertyFile));
             Bind<IPlayerFactory>().To<PlayerFactory>()
                 .WithConstructorArgument("names", _playerNames);
-            Bind<IPlayerDeque>().To<PlayerDeque>();
-            Bind<IGame>().To<Game>();
+            Bind<IJailer>().To<Jailer>().InSingletonScope();
+            Bind<IBanker>().To<Banker>().InSingletonScope();
+            Bind<ICardDealer>().To<CardDealer>().InSingletonScope();
+            Bind<IMortgageBroker>().To<MortgageBroker>().InSingletonScope();
+            Bind<IRealEstateAgent>().To<RealEstateAgent>().InSingletonScope();
+            Bind<IGame>().To<Game>().InSingletonScope();
         }
     }
 }

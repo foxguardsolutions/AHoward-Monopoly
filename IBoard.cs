@@ -2,7 +2,13 @@
 {
     public interface IBoard
     {
-        IProperty[] Properties { get; set; }
-        int PropertyCount { get; }
+        IPropertyGroup[] PropertyGroups { get; set; }
+        int PropertyCount { get; set; }
+
+        int GetPropertyPositionFromName(string name);
+        IProperty GetPropertyFromIndex(int index);
+        IProperty GetPropertyFromName(string name);
+        IPropertyGroup GetGroupFromProperty(IProperty property);
+        void MovePlayerToProperty(IPlayer player, IProperty property, bool canCollectGo = true);
     }
 }

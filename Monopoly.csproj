@@ -37,6 +37,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>packages\Ninject.3.2.2.0\lib\net40\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -53,40 +61,73 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="json\chanceCards.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="json\communityChestCards.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="json\propertyGroups.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="json\propertyGroupsTests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Monopoly.ruleset" />
     <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Banker.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
+    <Compile Include="Card.cs" />
+    <Compile Include="CardDealer.cs" />
+    <Compile Include="CardDeck.cs" />
+    <Compile Include="CardDeckTests.cs" />
+    <Compile Include="DeckFactory.cs" />
+    <Compile Include="DeckFactoryTests.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTests.cs" />
+    <Compile Include="IBanker.cs" />
     <Compile Include="IBoard.cs" />
+    <Compile Include="ICardDealer.cs" />
     <Compile Include="IGame.cs" />
-    <Compile Include="Injector.cs" />
+    <Compile Include="IJailer.cs" />
+    <Compile Include="IMortgageBroker.cs" />
     <Compile Include="IPlayer.cs" />
-    <Compile Include="IPlayerDeque.cs" />
     <Compile Include="IPlayerFactory.cs" />
     <Compile Include="IProperty.cs" />
-    <Compile Include="IPropertyFactory.cs" />
+    <Compile Include="IPropertyGroup.cs" />
     <Compile Include="IRandomGenerator.cs" />
+    <Compile Include="IRealEstateAgent.cs" />
+    <Compile Include="Jailer.cs" />
+    <Compile Include="JailerTests.cs" />
     <Compile Include="MonopolyCLI.cs" />
-    <Compile Include="MonopolyTests.cs" />
+    <Compile Include="MortgageBroker.cs" />
+    <Compile Include="MortgageBrokerTests.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerDeque.cs" />
     <Compile Include="PlayerDequeTests.cs" />
     <Compile Include="PlayerFactory.cs" />
     <Compile Include="PlayerTests.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="Property.cs" />
-    <Compile Include="PropertyFactory.cs" />
-    <Compile Include="PropertyTests.cs" />
+    <Compile Include="PropertyGroup.cs" />
+    <Compile Include="PropertyGroupFactory.cs" />
+    <Compile Include="PropertyGroupFactoryTests.cs" />
+    <Compile Include="PropertyGroupTests.cs" />
     <Compile Include="RandomGenerator.cs" />
-    <Compile Include="RandomGeneratorMoc.cs" />
+    <Compile Include="RealEstateAgent.cs" />
+    <Compile Include="RealEstateAgentTests.cs" />
     <Compile Include="ServiceModule.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="packages\StyleCop.Analyzers.1.0.0-beta012\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".git\" />

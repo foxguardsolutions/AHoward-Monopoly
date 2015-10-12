@@ -1,0 +1,358 @@
+[
+    {
+        "Name": "Card Group",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Community Chest",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 2
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Chance",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 7
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Community Chest",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 17
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Chance",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 22
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Community Chest",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 33
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Chance",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 36
+            }
+        ]
+    },
+    {
+        "Name": "Uncle Sam's Land",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Income Tax",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 4
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Luxury Tax",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 38
+            }
+        ]
+    },
+    {
+        "Name": "Action Properties",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Go",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 0
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Jail",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 10
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Free Parking",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 20
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Go To Jail",
+                "Price": 0,
+                "Rent": 0,
+                "MapIndex": 30
+            }
+        ]
+    },
+    {
+        "Name": "Purple",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Mediterranean Avenue",
+                "Price": 60,
+                "Rent": 20,
+                "MapIndex": 1
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Oriental Avenue",
+                "Price": 60,
+                "Rent": 20,
+                "MapIndex": 3
+            }
+
+        ]
+    },
+    {
+        "Name": "RailRoads",
+        "RentFunction": "Incremental",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Reading RailRoad",
+                "Price": 200,
+                "Rent": 25,
+                "MapIndex": 5
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Pennsylvania RailRoad",
+                "Price": 200,
+                "Rent": 25,
+                "MapIndex": 15
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "B. & O. RailRoad",
+                "Price": 200,
+                "Rent": 25,
+                "MapIndex": 25
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Short Line RailRoad",
+                "Price": 200,
+                "Rent": 25,
+                "MapIndex": 35
+            }
+        ]
+    },
+    {
+        "Name": "Light Blue",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "China Avenue",
+                "Price": 100,
+                "Rent": 30,
+                "MapIndex": 6
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Vermont Avenue",
+                "Price": 100,
+                "Rent": 30,
+                "MapIndex": 8
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Connecticut Avenue",
+                "Price": 120,
+                "Rent": 40,
+                "MapIndex": 9
+            }
+        ]
+    },           
+    {
+        "Name": "Pink",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "St. Charles Place",
+                "Price": 140,
+                "Rent": 50,
+                "MapIndex": 11
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "States Avenue",
+                "Price": 140,
+                "Rent": 50,
+                "MapIndex": 13
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Virginia Avenue",
+                "Price": 160,
+                "Rent": 60,
+                "MapIndex": 14
+            }
+        ]
+    }, 
+    {
+        "Name": "Orange",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "St. James Place",
+                "Price": 180,
+                "Rent": 70,
+                "MapIndex": 16
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Tennesse Avenue",
+                "Price": 180,
+                "Rent": 70,
+                "MapIndex": 18
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "New York Avenue",
+                "Price": 200,
+                "Rent": 80,
+                "MapIndex": 19
+            }
+        ]
+    },
+    {
+        "Name": "Red",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Kentucky Avenue",
+                "Price": 220,
+                "Rent": 90,
+                "MapIndex": 21
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Indianna Avenue",
+                "Price": 220,
+                "Rent": 90,
+                "MapIndex": 23
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Illinois Avenue",
+                "Price": 240,
+                "Rent": 100,
+                "MapIndex": 24
+            }
+        ]
+    },
+    {
+        "Name": "Yellow",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Atlantic Avenue",
+                "Price": 260,
+                "Rent": 110,
+                "MapIndex": 26
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Ventnor Avenue",
+                "Price": 260,
+                "Rent": 110,
+                "MapIndex": 27
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Illinois Avenue",
+                "Price": 280,
+                "Rent": 120,
+                "MapIndex": 29
+            }
+        ]
+    },
+    {
+        "Name": "Green",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Pacific Avenue",
+                "Price": 300,
+                "Rent": 130,
+                "MapIndex": 31
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "North Carolina Avenue",
+                "Price": 300,
+                "Rent": 130,
+                "MapIndex": 32
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Pennsatucky Avenue",
+                "Price": 320,
+                "Rent": 140,
+                "MapIndex": 34
+            }
+        ]
+    },
+    {
+        "Name": "Blue",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Park Place",
+                "Price": 350,
+                "Rent": 180,
+                "MapIndex": 37
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Boardwalk",
+                "Price": 400,
+                "Rent": 230,
+                "MapIndex": 39
+            }
+        ]
+    },
+    {
+        "Name": "Utilities",
+        "RentFunction": "Multiplicative",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Electric Company",
+                "Price": 150,
+                "Rent": 100,
+                "MapIndex": 12
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Water Works",
+                "Price": 150,
+                "Rent": 100,
+                "MapIndex": 28
+            }
+        ]
+    }
+]

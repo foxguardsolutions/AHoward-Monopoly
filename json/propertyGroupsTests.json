@@ -1,0 +1,46 @@
+[
+    {
+        "Name": "Test Group 1",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Park Place",
+                "Price": 250,
+                "Rent": 90,
+                "Action": "Pay Rent",
+                "MapIndex": 0
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Boulevard",
+                "Price": 200,
+                "Rent": 85,
+                "Action": "Pay Rent",
+                "MapIndex": 1
+            }
+        ]
+    },
+    {
+        "Name": "Test Group 2",
+        "RentFunction": "Normal",
+        "Properties": [
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Other Place",
+                "Price": 250,
+                "Rent": 90,
+                "Action": "Pay Rent",
+                "MapIndex": 2
+            },
+            {
+                "$type": "Monopoly.Property, ConsoleApplication",
+                "Name": "Another Boulevard",
+                "Price": 200,
+                "Rent": 85,
+                "Action": "Pay Rent",
+                "MapIndex": 3
+            }
+        ]
+    }
+]
