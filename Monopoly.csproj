@@ -37,6 +37,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Moq, Version=4.2.1507.118, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>packages\Moq.4.2.1507.0118\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -57,7 +61,6 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="json\chanceCards.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -78,25 +81,34 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AlternateRandomGeneratorMoc.cs" />
+    <Compile Include="Banker.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardTests.cs" />
     <Compile Include="Card.cs" />
+    <Compile Include="CardDealer.cs" />
     <Compile Include="CardDeck.cs" />
     <Compile Include="CardDeckTests.cs" />
     <Compile Include="DeckFactory.cs" />
     <Compile Include="DeckFactoryTests.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameTests.cs" />
+    <Compile Include="IBanker.cs" />
     <Compile Include="IBoard.cs" />
+    <Compile Include="ICardDealer.cs" />
     <Compile Include="IGame.cs" />
+    <Compile Include="IJailer.cs" />
+    <Compile Include="IMortgageBroker.cs" />
     <Compile Include="IPlayer.cs" />
-    <Compile Include="IQueue.cs" />
     <Compile Include="IPlayerFactory.cs" />
     <Compile Include="IProperty.cs" />
     <Compile Include="IPropertyGroup.cs" />
     <Compile Include="IRandomGenerator.cs" />
+    <Compile Include="IRealEstateAgent.cs" />
+    <Compile Include="Jailer.cs" />
+    <Compile Include="JailerTests.cs" />
     <Compile Include="MonopolyCLI.cs" />
+    <Compile Include="MortgageBroker.cs" />
+    <Compile Include="MortgageBrokerTests.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerDeque.cs" />
     <Compile Include="PlayerDequeTests.cs" />
@@ -112,9 +124,9 @@
     <Compile Include="PropertyGroupFactory.cs" />
     <Compile Include="PropertyGroupFactoryTests.cs" />
     <Compile Include="PropertyGroupTests.cs" />
-    <Compile Include="PropertyTests.cs" />
     <Compile Include="RandomGenerator.cs" />
-    <Compile Include="RandomGeneratorMoc.cs" />
+    <Compile Include="RealEstateAgent.cs" />
+    <Compile Include="RealEstateAgentTests.cs" />
     <Compile Include="ServiceModule.cs" />
   </ItemGroup>
   <ItemGroup>

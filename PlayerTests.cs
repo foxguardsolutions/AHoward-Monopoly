@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using Moq;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -6,29 +6,14 @@ namespace Monopoly
     [TestFixture]
     public class PlayerTests
     {
-        private IBoard gameBoard;
-        private IRandomGenerator generator;
         private Player player;
 
         [SetUp]
         public void Setup()
         {
-            generator = new RandomGeneratorMoc();
-            gameBoard = new Board(File.ReadAllText("json\\propertyGroupsTests.json"));
-            player = new Player(generator, gameBoard);
-        }
-
-        [TestCase(0, Result = 0)]
-        [TestCase(1, Result = 1)]
-        [TestCase(2, Result = 2)]
-        [TestCase(3, Result = 3)]
-        [TestCase(4, Result = 0)]
-        [TestCase(5, Result = 1)]
-        [TestCase(6, Result = 2)]
-        public int PlayerPositionWrapsAroundAfterExceedingNumberOfProperties(int position)
-        {
-            player.Position = position;
-            return player.Position;
+            var mockGenerator = new Mock<IRandomGenerator>();
+            mockGenerator.Setup(x => x.Next(1, 6)).Returns(2);
+            player = new Player(mockGenerator.Object);
         }
 
         [TestCase(Result = 2)]
@@ -53,16 +38,6 @@ namespace Monopoly
             Assert.AreEqual(2, player.ConsecutiveDoublesRolled);
             player.RollBothDice();
             Assert.AreEqual(3, player.ConsecutiveDoublesRolled);
-        }
-
-        [Test]
-        public void UseGetOutOfJailFreeCardReleasesPlayerFromJailAndDecreasesCardCount()
-        {
-            player.GetOutOfJailFreeCards.Add(new Card());
-            player.IsInJail = true;
-            player.UseGetOutOfJailFreeCard();
-            Assert.AreEqual(0, player.GetOutOfJailFreeCards.Count);
-            Assert.IsFalse(player.IsInJail);
         }
     }
 }

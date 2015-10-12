@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Moq;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
@@ -15,7 +16,9 @@ namespace Monopoly
         public void Setup()
         {
             string deckData = File.ReadAllText("json\\chanceCards.json");
-            deck = new CardDeck(deckData, new AlternateRandomGeneratorMoc());
+            var generator = new Mock<IRandomGenerator>();
+            generator.Setup(x => x.Next(It.IsAny<int>(), It.IsAny<int>())).Returns(2);
+            deck = new CardDeck(deckData, generator.Object);
         }
 
         [Test]

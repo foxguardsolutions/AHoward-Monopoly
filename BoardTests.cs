@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -21,19 +20,19 @@ namespace Monopoly
             Assert.AreEqual(4, board.PropertyCount);
         }
 
-        [TestCase("Park Place", Result = 10)]
-        [TestCase("Boulevard", Result = 12)]
-        [TestCase("Other Place", Result = 9)]
-        [TestCase("Another Boulevard", Result = 8)]
+        [TestCase("Park Place", Result = 0)]
+        [TestCase("Boulevard", Result = 1)]
+        [TestCase("Other Place", Result = 2)]
+        [TestCase("Another Boulevard", Result = 3)]
         public int GetPropertyPositionFromNameReturnsCorrectIndex(string toFind)
         {
             return board.GetPropertyPositionFromName(toFind);
         }
 
-        [TestCase(0, 0, 10)]
-        [TestCase(0, 1, 12)]
-        [TestCase(1, 0, 9)]
-        [TestCase(1, 1, 8)]
+        [TestCase(0, 0, 0)]
+        [TestCase(0, 1, 1)]
+        [TestCase(1, 0, 2)]
+        [TestCase(1, 1, 3)]
         public void GetPropertyFromIndexReturnsCorrectProperty(int groupIndex, int propertyIndex, int mapIndex)
         {
             Assert.AreEqual(board.PropertyGroups[groupIndex].Properties[propertyIndex], board.GetPropertyFromIndex(mapIndex));
@@ -48,80 +47,25 @@ namespace Monopoly
             Assert.AreEqual(board.PropertyGroups[groupIndex].Properties[propertyIndex], board.GetPropertyFromName(name));
         }
 
-        [Test]
-        public void PlayerPurchasedPropertyUpdatesGroupOwnersAndPropertysOwner()
+        [TestCase("Park Place", Result = "Test Group 1")]
+        [TestCase("Other Place", Result = "Test Group 2")]
+        public string GetGroupFromPropertyReturnsCorrectProperty(string propertyName)
         {
-            Player player = new Player(new RandomGeneratorMoc(), board, "A");
-            var property = board.GetPropertyFromName("Park Place");
-            board.PlayerPurchasedProperty(player, property);
-            Assert.AreEqual(1, board.PropertyGroups[0].Owners.Length);
-            Assert.AreEqual(player, board.PropertyGroups[0].Owners[0]);
-            Assert.AreEqual(player, property.Owner);
+            var property = board.GetPropertyFromName(propertyName);
+            var group = board.GetGroupFromProperty(property);
+            return group.Name;
         }
 
-        [Test]
-        public void CalculateRentReturnsZeroWhenPropertyIsMortgaged()
+        [TestCase("Park Place", Result = 0)]
+        [TestCase("Boulevard", Result = 1)]
+        [TestCase("Another Boulevard", Result = 3)]
+        public int MovePlayerToPropertyUpdatesPlayersPosition(string propertyName)
         {
-            Player player = new Player(new RandomGenerator(), board, "A");
-            var property = board.GetPropertyFromName("Park Place");
-            property.Mortgaged = true;
-            Assert.AreEqual(0, board.CalculateRent(property));
-        }
-
-        [Test]
-        public void CalculateRentReturnsRentPriceWhenNotAllPropertiesOfGroupAreOwned()
-        {
-            Player player = new Player(new RandomGenerator(), board, "A");
-            var property = board.GetPropertyFromName("Park Place");
-            board.PlayerPurchasedProperty(player, property);
-            Assert.AreEqual(90, board.CalculateRent(property));
-        }
-
-        [Test]
-        public void CalculateRentReturnsDoubleRentPriceWhenAllPropertiesOfGroupAreOwned()
-        {
-            Player player = new Player(new RandomGenerator(), board, "A");
-            var parkPlace = board.GetPropertyFromName("Park Place");
-            var boulevard = board.GetPropertyFromName("Boulevard");
-            board.PlayerPurchasedProperty(player, parkPlace);
-            board.PlayerPurchasedProperty(player, boulevard);
-            Assert.AreEqual(180, board.CalculateRent(parkPlace));
-        }
-
-        [Test]
-        public void CalculateRentReturnsRentPriceWhenAllPropertiesOfGroupAreOwnedByDifferentPlayers()
-        {
-            Player playerA = new Player(new RandomGenerator(), board, "A");
-            Player playerB = new Player(new RandomGenerator(), board, "B");
-            var parkPlace = board.GetPropertyFromName("Park Place");
-            var boulevard = board.GetPropertyFromName("Boulevard");
-            board.PlayerPurchasedProperty(playerA, parkPlace);
-            board.PlayerPurchasedProperty(playerB, boulevard);
-            Assert.AreEqual(90, board.CalculateRent(parkPlace));
-        }
-
-        [Test]
-        public void GetAllPropertiesOwnedByPlayerReturnsAllPropertiesOwnedByPlayer()
-        {
-            Player player = new Player(new RandomGeneratorMoc(), board, "A");
-            var parkPlace = board.GetPropertyFromName("Park Place");
-            var boulevard = board.GetPropertyFromName("Boulevard");
-            var otherPlace = board.GetPropertyFromName("Other Place");
-
-            var testSequence = new IProperty[] { };
-            Assert.IsTrue(testSequence.SequenceEqual(board.GetAllPropertiesOwnedByPlayer(player)));
-
-            parkPlace.Owner = player;
-            testSequence = new IProperty[] { parkPlace };
-            Assert.IsTrue(testSequence.SequenceEqual(board.GetAllPropertiesOwnedByPlayer(player)));
-
-            boulevard.Owner = player;
-            testSequence = new IProperty[] { parkPlace, boulevard };
-            Assert.IsTrue(testSequence.SequenceEqual(board.GetAllPropertiesOwnedByPlayer(player)));
-
-            otherPlace.Owner = player;
-            testSequence = new IProperty[] { parkPlace, boulevard, otherPlace };
-            Assert.IsTrue(testSequence.SequenceEqual(board.GetAllPropertiesOwnedByPlayer(player)));
+            Player player = new Player(null);
+            var property = board.GetPropertyFromName(propertyName);
+            player.Position = 0;
+            board.MovePlayerToProperty(player, property);
+            return player.Position;
         }
     }
 }

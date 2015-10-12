@@ -1,5 +1,7 @@
 [
     {
+        "Name": "Test Group 1",
+        "RentFunction": "Normal",
         "Properties": [
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
@@ -7,7 +9,7 @@
                 "Price": 250,
                 "Rent": 90,
                 "Action": "Pay Rent",
-                "MapIndex": 10
+                "MapIndex": 0
             },
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
@@ -15,11 +17,13 @@
                 "Price": 200,
                 "Rent": 85,
                 "Action": "Pay Rent",
-                "MapIndex": 12
+                "MapIndex": 1
             }
         ]
     },
     {
+        "Name": "Test Group 2",
+        "RentFunction": "Normal",
         "Properties": [
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
@@ -27,7 +31,7 @@
                 "Price": 250,
                 "Rent": 90,
                 "Action": "Pay Rent",
-                "MapIndex": 9
+                "MapIndex": 2
             },
             {
                 "$type": "Monopoly.Property, ConsoleApplication",
@@ -35,7 +39,7 @@
                 "Price": 200,
                 "Rent": 85,
                 "Action": "Pay Rent",
-                "MapIndex": 8
+                "MapIndex": 3
             }
         ]
     }

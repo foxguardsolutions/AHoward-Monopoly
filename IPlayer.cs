@@ -12,12 +12,8 @@ namespace Monopoly
         int LastDiceRoll { get; set; }
         int ConsecutiveDoublesRolled { get; set; }
         int ConsecutiveTurnsInJail { get; set; }
-        bool IsInJail { get; set; }
-        List<Card> GetOutOfJailFreeCards { get; set; }
 
         int RollDie();
         int RollBothDice();
-        void ReleaseFromJail();
-        Card UseGetOutOfJailFreeCard();
     }
 }

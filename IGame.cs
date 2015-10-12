@@ -2,11 +2,15 @@
 {
     public interface IGame
     {
-        IQueue Players { get; set; }
+        PlayerDeque Players { get; set; }
         IBoard GameBoard { get; }
-        CardDeck CommunityChest { set; }
-        CardDeck Chance { set; }
+        IJailer Jailer { get; set; }
+        IMortgageBroker Broker { get; set; }
+        IRealEstateAgent Agent { get; set; }
+        ICardDealer Dealer { get; set; }
+        IBanker Banker { get; set; }
 
         void Play();
+        void TakeTurn(IPlayer player);
     }
 }

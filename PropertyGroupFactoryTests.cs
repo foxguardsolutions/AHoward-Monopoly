@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using NUnit.Framework;
 
@@ -24,10 +23,12 @@ namespace Monopoly
             PropertyGroup[] groups = PropertyGroupFactory.GenerateGroups(jsonString);
 
             Assert.AreEqual(2, groups.Length);
+            var index = 0;
             foreach (var group in groups)
             {
                 Assert.AreEqual(2, group.Properties.Length);
-                Assert.AreEqual(0, group.Owners.Length);
+                Assert.AreEqual(string.Format("Test Group {0}", ++index), group.Name);
+                Assert.AreEqual("Normal", group.RentFunction);
                 Assert.AreEqual(typeof(Property), group.Properties[0].GetType());
             }
         }

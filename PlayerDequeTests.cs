@@ -1,5 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Moq;
 using NUnit.Framework;
 
 namespace Monopoly
@@ -7,27 +8,36 @@ namespace Monopoly
     [TestFixture]
     public class PlayerDequeTests
     {
-        private IBoard gameBoard;
+        private IPlayerFactory playerFactory;
         private IRandomGenerator generator;
-        private PlayerFactory playerFactory;
         private string[] players;
 
         [SetUp]
         public void Setup()
         {
-            generator = new RandomGeneratorMoc();
-            string[] properties =
-            {
-                "a", "b", "c"
-            };
+            var mgenerator = new Mock<IRandomGenerator>();
+            mgenerator.Setup(x => x.Next(1, 6)).Returns(2);
+            generator = mgenerator.Object;
 
-            gameBoard = new Board(File.ReadAllText("json\\propertyGroupsTests.json"));
+            Mock<IBoard> board = new Mock<IBoard>();
+            board.SetupProperty(x => x.PropertyCount, 40);
+
             players = new string[]
             {
-                "a", "b", "c", "d"
+                "a",
+                "b",
+                "c",
+                "d"
             };
 
-            playerFactory = new PlayerFactory(players, generator, gameBoard);
+            var mfactory = new Mock<IPlayerFactory>();
+            mfactory.Setup(x => x.GeneratePlayers()).Returns(new IPlayer[] {
+                new Player(mgenerator.Object, players[0]),
+                new Player(mgenerator.Object, players[1]),
+                new Player(mgenerator.Object, players[2]),
+                new Player(mgenerator.Object, players[3]),
+            });
+            playerFactory = mfactory.Object;
         }
 
         [Test]

@@ -8,9 +8,10 @@ namespace Monopoly
     {
         private readonly Dictionary<string, IPropertyGroup> nameToGroupMapping;
         private readonly Dictionary<int, IPropertyGroup> mapIndexToGroupMapping;
+        private const int _moneyPaidForPassingGo = 200;
 
         public IPropertyGroup[] PropertyGroups { get; set; }
-        public int PropertyCount { get; }
+        public int PropertyCount { get; set; }
 
         public Board(string propertyGroupData)
         {
@@ -52,42 +53,20 @@ namespace Monopoly
             return nameToGroupMapping[name].GetPropertyFromName(name);
         }
 
-        public void PlayerPurchasedProperty(IPlayer player, IProperty property)
-        {
-            nameToGroupMapping[property.Name].AddOwner(player);
-            property.Owner = player;
-        }
-
-        public int CalculateRent(IProperty property)
-        {
-            if (property.Mortgaged)
-            {
-                return 0;
-            }
-
-            var group = nameToGroupMapping[property.Name];
-            if (group.AllPropertiesOwned() && group.HasSingleOwner())
-            {
-                return property.Rent * 2;
-            }
-
-            return property.Rent;
-        }
-
-        public IProperty[] GetAllPropertiesOwnedByPlayer(IPlayer player)
-        {
-            IProperty[] ownedProperties = { };
-            foreach (var group in PropertyGroups)
-            {
-                ownedProperties = ownedProperties.Concat(group.GetPropertiesInGroupOwnedByPlayer(player)).ToArray();
-            }
-
-            return ownedProperties;
-        }
-
         public IPropertyGroup GetGroupFromProperty(IProperty property)
         {
             return nameToGroupMapping[property.Name];
+        }
+
+        public void MovePlayerToProperty(IPlayer player, IProperty property, bool canCollectGo = true)
+        {
+            if (property.MapIndex < player.Position && canCollectGo)
+            {
+                player.Money += _moneyPaidForPassingGo;
+            }
+
+            player.Position = property.MapIndex;
+            Console.WriteLine("{0} moved to property: {1}", player.Name, GetPropertyFromIndex(player.Position).Name);
         }
     }
 }
